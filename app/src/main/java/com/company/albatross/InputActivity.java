@@ -1,12 +1,18 @@
 package com.company.albatross;
 
+import static com.google.android.material.internal.ViewUtils.dpToPx;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -46,22 +52,29 @@ public class InputActivity extends AppCompatActivity {
         makeJobSearchLayout();
     }
 
+    @SuppressLint("RestrictedApi")
     private LinearLayout makeCustomJobSearchLayout(int num) {
         LinearLayout layout = new LinearLayout(this);
         //Linearlayout id 생성
         customJobSearchLayoutId = View.generateViewId();
         layout.setId(customJobSearchLayoutId);
         LinearLayoutId.add(customJobSearchLayoutId);
-        layout.setLayoutParams(new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        layout.setLayoutParams(params);
         layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setBackgroundResource(R.drawable.round_corner);
+
 
         // 제목 추가
         TextView titleTextView = new TextView(this);
         String strAlbaNum = Integer.toString(num);
         titleTextView.setText("조건 " + strAlbaNum);
         titleTextView.setTextSize(18);
+        titleTextView.setTextColor(Color.BLACK);
+        titleTextView.setTypeface(null, Typeface.BOLD);
         layout.addView(titleTextView);
 
         // 구분선을 추가
@@ -72,6 +85,7 @@ public class InputActivity extends AppCompatActivity {
         ));
         dividerView.setBackgroundColor(Color.GRAY);
         layout.addView(dividerView);
+
 
         //직종 선택 추가
         TextView jobTitleTextView = new TextView(this);
@@ -86,7 +100,6 @@ public class InputActivity extends AppCompatActivity {
         jobTitleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         jobTitleSpinner.setAdapter(jobTitleAdapter);
         layout.addView(jobTitleSpinner);
-
         //요일 선택 추가
         TextView dayTextView = new TextView(this);
         dayTextView.setText("요일");
@@ -97,23 +110,17 @@ public class InputActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         dayRadioGroup.setOrientation(RadioGroup.HORIZONTAL);
-//
-//        LinearLayout dayLinearLayout = new LinearLayout(this);
-//        dayLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(
-//                ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT));
-//        dayLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         String[] days = getResources().getStringArray(R.array.day_array);
         for (String day : days) {
             RadioButton dayRadioButton = new RadioButton(this);
+            dayRadioButton.setPadding(dpToPx(0),dpToPx(0),dpToPx(0),dpToPx(0));
+            Log.i("dpToPx()", String.valueOf(dpToPx(4)));
             dayRadioButtonId = View.generateViewId();
             dayRadioButton.setId(dayRadioButtonId);
             dayRadioButton.setText(day);
+            dayRadioButton.setTextSize(dpToPx(3));
             dayRadioGroup.addView(dayRadioButton);
-//            CheckBox dayCheckBox = new CheckBox(this);
-//            dayCheckBox.setText(day);
-//            dayLinearLayout.addView(dayCheckBox);
         }
 
 //        layout.addView(dayLinearLayout);
@@ -182,18 +189,20 @@ public class InputActivity extends AppCompatActivity {
 
         // 제목
         TextView titleTextView = new TextView(this);
-        titleTextView.setText("조건 설정");
+        titleTextView.setText("시간표 마법사");
         titleTextView.setTextSize(24);
+        titleTextView.setGravity(Gravity.CENTER);
+        titleTextView.setTextColor(Color.BLACK);
+        titleTextView.setTypeface(null, Typeface.BOLD);
         linearLayout.addView(titleTextView);
 
-        // 구분선
-        View dividerView = new View(this);
-        dividerView.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                1
-        ));
-        dividerView.setBackgroundColor(Color.BLACK);
-        linearLayout.addView(dividerView);
+        // 설명
+        TextView introTextView = new TextView(this);
+        introTextView.setText("조건을 입력해주시면 \n모든 경우의 수를 조합해본 후\n만들어질수 있는 시간표를 알려드릴게요.");
+        introTextView.setTextSize(15);
+        introTextView.setGravity(Gravity.CENTER);
+        introTextView.setTextColor(Color.GRAY);
+        linearLayout.addView(introTextView);
 
         linearLayout.addView(makeCustomJobSearchLayout(albaNumber));
 
@@ -249,6 +258,10 @@ public class InputActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+    }
+
+    public int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
 
