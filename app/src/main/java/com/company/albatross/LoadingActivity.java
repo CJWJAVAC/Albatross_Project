@@ -115,7 +115,8 @@ public class LoadingActivity extends AppCompatActivity {
                         IdFromRegionNodeArrayList.add(regionHashMap.get(keys.next()));
                     }
                     Log.i("idsFromRegionNode",String.valueOf(IdFromRegionNodeArrayList));
-                    getPossibleIdHashMaps(idj, idd, st, et, IdFromRegionNodeArrayList, wage,0, finalIds); //테스트: 데이터양이 너무 없어 중복된 값이 없음...
+                    //TODO 고쳐야함.
+                    getPossibleIdHashMaps(idj, idj, st, et, idj, wage,0, finalIds); //테스트: 데이터양이 너무 없어 중복된 값이 없음...
 
                 }
             }
