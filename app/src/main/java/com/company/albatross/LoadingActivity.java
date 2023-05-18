@@ -14,41 +14,220 @@ import com.github.tlaabs.timetableview.TimetableView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class LoadingActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
 
     private ArrayList<ArrayList<String>> options=new ArrayList<ArrayList<String>>();
-    private int OPTIONSIZE=-1;
-    private int option_idx=0;
-    private ArrayList<HashMap<String, String>> possibleIdHashMaps=new ArrayList<HashMap<String, String>>();
+    private static int timetableViewInputIndex=0;
+    private static int caseNum=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
+        Log.i("start LoadingActivity", "");
         mDatabase= FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
-        ArrayList<ArrayList<HashMap<String, String>>> finalIds= new ArrayList<>();
-        getDataFromMainActivity(option_idx, finalIds);
-    }
 
-
-    private void getDataFromMainActivity(int i, ArrayList finalIds){
+        Log.i("start mDatabase", "");
         Intent intent=getIntent();
         options=(ArrayList<ArrayList<String>>) intent.getSerializableExtra("jobOptions");
-        OPTIONSIZE=options.size();
-        getId(options,i, finalIds);
+        Log.i("start options", String.valueOf(options));
+        getDataFromFirebase(0, new HashMap<Integer, ArrayList<String>>());
     }
 
-    private void getId(ArrayList<ArrayList<String>> options, int i, ArrayList finalIds){
-        getJobFromFirebase(options.get(i).get(0),options.get(i).get(1),options.get(i).get(2),options.get(i).get(3),options.get(i).get(4), options.get(i).get(5), finalIds);
+    private void getDataFromFirebase(int option_idx, HashMap<Integer, ArrayList<String>> results){
+        if (option_idx==options.size()){
+            Log.i("results", String.valueOf(results));
+            SharedPreferences mPref= PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor=mPref.edit();
+            getAllOfCase(results, new ArrayList<>(),0, editor);
+        }
+        else {
+            results.put(option_idx, new ArrayList<>());
+            String job = options.get(option_idx).get(0);
+            String day = options.get(option_idx).get(1);
+            int startTime = Integer.parseInt(options.get(option_idx).get(2));
+            int endTime = Integer.parseInt(options.get(option_idx).get(3));
+            String region = options.get(option_idx).get(4);
+            int wage = Integer.parseInt(options.get(option_idx).get(5));
+
+            Log.i("start getDataFromFirebase", "");
+            DatabaseReference dayRef = mDatabase.child("Day").child(day);
+            dayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Set<String> monIds = new HashSet<>();
+
+                    for (DataSnapshot idSnapshot : dataSnapshot.getChildren()) {
+                        String id = idSnapshot.getValue(String.class);
+                        monIds.add(id);
+                    }
+
+                    // delivery 노드의 id 데이터 가져오기
+                    DatabaseReference jobRef = mDatabase.child("Job").child(job);
+                    jobRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Set<String> deliveryIds = new HashSet<>();
+
+                            for (DataSnapshot idSnapshot : dataSnapshot.getChildren()) {
+                                String id = idSnapshot.getValue(String.class);
+                                deliveryIds.add(id);
+                            }
+
+                            // sun 노드의 id 데이터 가져오기
+                            DatabaseReference regionRef = mDatabase.child("Region").child(region);
+                            regionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Set<String> sunIds = new HashSet<>();
+
+                                    for (DataSnapshot idSnapshot : dataSnapshot.getChildren()) {
+                                        String id = idSnapshot.getValue(String.class);
+                                        sunIds.add(id);
+                                    }
+
+                                    // 공통된 id 데이터 찾기
+                                    Set<String> commonIds = findCommonIds(monIds, deliveryIds, sunIds);
+                                    int i = 0;
+                                    for (String id : commonIds) {
+                                        Log.i("commonIds", id);
+                                        i += 1;
+                                        DatabaseReference idRef = mDatabase.child("ID").child(id);
+                                        int finalI = i;
+                                        idRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot snapshot) {
+                                                HashMap<String, String> idValues = (HashMap<String, String>) snapshot.getValue();
+                                                Log.i("idValues.get('day')", idValues.get("day"));
+                                                Log.i("idValues.get('job')", idValues.get("job"));
+                                                Log.i("idValues.get('region')", idValues.get("region"));
+                                                if (Integer.parseInt(idValues.get("wage")) >= wage)
+                                                    if (Integer.parseInt(idValues.get("startHour") + idValues.get("startMinute")) >= startTime)
+                                                        if (Integer.parseInt(idValues.get("endHour") + idValues.get("endMinute")) <= endTime) {
+                                                            results.get(option_idx).add(getTimetableViewInput(idValues));
+                                                        }
+                                                if (finalI == commonIds.size())
+                                                    getDataFromFirebase(option_idx + 1, results);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                System.out.println("Error: " + databaseError.getMessage());
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    System.out.println("Error: " + databaseError.getMessage());
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            System.out.println("Error: " + databaseError.getMessage());
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    System.out.println("Error: " + databaseError.getMessage());
+                }
+            });
+        }
+    }
+
+    // 세 집합에서 공통된 요소 찾기
+    private static Set<String> findCommonIds(Set<String> set1, Set<String> set2, Set<String> set3) {
+        Set<String> commonIds = new HashSet<>();
+
+        // 첫 번째 집합과 두 번째 집합의 공통된 요소 찾기
+        for (String id : set1) {
+            if (set2.contains(id) && set3.contains(id)) {
+                commonIds.add(id);
+            }
+        }
+        return commonIds;
+    }
+
+    private static String getTimetableViewInput(HashMap<String, String> hashMapValue){
+//        String timetableViewInput="{'sticker':[";
+        String timetableViewInput="{'idx':"+Integer.toString(timetableViewInputIndex)+",'schedule':[{";
+        timetableViewInput+="'classTitle':'"+hashMapValue.get("name")+"',";
+        timetableViewInput+="'classPlace':'"+hashMapValue.get("region")+"',";
+        timetableViewInput+="'professorName':'',";
+        timetableViewInput+="'day':";
+        switch (hashMapValue.get("day")){
+            case "mon":
+                timetableViewInput+="0";
+                break;
+            case "tue":
+                timetableViewInput+="1";
+                break;
+            case "wen":
+                timetableViewInput+="2";
+                break;
+            case "thu":
+                timetableViewInput+="3";
+                break;
+            case "fri":
+                timetableViewInput+="4";
+                break;
+            case "sat":
+                timetableViewInput+="5";
+                break;
+            case "sun":
+                timetableViewInput+="6";
+                break;
+            default:
+                timetableViewInput+="0";
+                break;
+        }
+        timetableViewInput+=",'startTime':{'hour':"+hashMapValue.get("startHour")+",'minute':"+hashMapValue.get("startMinute")+"},";
+        timetableViewInput+="'endTime':{'hour':"+hashMapValue.get("endHour")+",'minute':"+hashMapValue.get("endMinute")+"}}]}";
+        timetableViewInputIndex+=1;
+        return timetableViewInput;
+    }
+
+    private void getAllOfCase(HashMap<Integer, ArrayList<String>> results, ArrayList<String> combination, int index, SharedPreferences.Editor editor){
+        if (index == results.size()) {
+            // 조합 완성됨
+            Log.i("combination","{'sticker':"+String.valueOf(combination)+"}");
+            editor.putString(Integer.toString(caseNum++),"{'sticker':"+String.valueOf(combination)+"}" );
+            editor.commit();
+            return;
+        }
+        List<String> currentList = results.get(index);
+
+        for (int i = 0; i < currentList.size(); i++) {
+            combination.add(currentList.get(i));
+            getAllOfCase(results, combination, index + 1, editor);
+            combination.remove(combination.size() - 1);
+        }
+
+        if (index==0){
+            Intent intent=new Intent(this, ShowTimeTablesActivity.class);
+            intent.putExtra("timetableSize", caseNum );
+            startActivity(intent);
+        }
     }
 
     private void getJobFromFirebase(String job, String day, String st, String et, String region, String wage, ArrayList finalIds){
@@ -175,13 +354,13 @@ public class LoadingActivity extends AppCompatActivity {
                         getPossibleIdHashMaps(idFromJob, idFromDay, st, et, idFromRegion, wage,idx+1, finalIds);
                     else{
                         Log.i("finalIds", String.valueOf(finalIds));
-                        if (option_idx+1<OPTIONSIZE) {
-                            option_idx += 1;
-                            getId(options, option_idx, finalIds);
-                        }else{
-                            Log.i("getPossibleIdHashMaps", "end");
-                            setTimeTableViewInput(finalIds);
-                        }
+//                        if (option_idx+1<OPTIONSIZE) {
+//                            option_idx += 1;
+////                            getId(options, option_idx, finalIds);
+//                        }else{
+//                            Log.i("getPossibleIdHashMaps", "end");
+//                            setTimeTableViewInput(finalIds);
+//                        }
                     }
                 }
             }
@@ -262,19 +441,5 @@ public class LoadingActivity extends AppCompatActivity {
             editor.putString(Integer.toString(i-1), input);
             editor.commit();
         }
-        Intent intent=new Intent(this, ShowTimeTablesActivity.class);
-        intent.putExtra("timetableSize", finalIds.size() );
-        startActivity(intent);
     }
-
-//    private void getSelectedIdHashMaps(HashMap allOfIds, ArrayList sIds){
-//        Log.i("zzidHashMap", String.valueOf(allOfIds));
-//        for (Object id : sIds){
-////            HashMap<String, String> value = allOfIds.get(id);
-//            Log.i("zzgetSelectedValue",String.valueOf(allOfIds.get(id)));
-//        }
-//        Log.i("zz", "done");
-//
-//    }
-
 }
