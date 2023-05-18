@@ -28,9 +28,18 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +67,11 @@ public class HomeFragment extends ListFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private DatabaseReference mDatabase;
+
+    private ArrayList<String> employerIdTokens = new ArrayList<>();
+    private ArrayList<String> ids=new ArrayList<>();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -181,11 +195,28 @@ public class HomeFragment extends ListFragment {
         }
     }
     private void setupListView() {
+        mDatabase= FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+        DatabaseReference idRef = mDatabase.child("ID");
+        Query query=idRef.limitToFirst(5);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList<String> items = new ArrayList<>();
+                for(DataSnapshot childSnapshot : snapshot.getChildren()){
+                    ids.add(childSnapshot.getKey());
+                    HashMap<String, String> idValue =(HashMap<String, String>) childSnapshot.getValue();
+                    employerIdTokens.add(idValue.get("employerIdToken"));
+                    items.add(idValue.get("name")+"\n"+"시급 "+idValue.get("wage")+"원\n"+idValue.get("startHour")+"시 ~ "+idValue.get("endHour")+"시\n"+ "경기도 수원시" + idValue.get("region")+"\n"+idValue.get("phoneNumber"));
+                }
+                ListAdapter adapter = new ListAdapter(mActivity, items);
+                setListAdapter(adapter);
+            }
 
-
-        ArrayList<String> items = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.items)));
-        ListAdapter adapter = new ListAdapter(mActivity, items);
-        setListAdapter(adapter);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
     }
 
 
@@ -233,11 +264,12 @@ public class HomeFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         // 클릭된 아이템의 값을 가져옵니다.
         String item = (String) getListAdapter().getItem(position);
-
         // Toast로 출력합니다.
         //Toast.makeText(getActivity(), "선택된 알바: " + item, Toast.LENGTH_SHORT).show();
         Intent showDetail = new Intent(mActivity.getApplicationContext(),DetailActivity.class);
         showDetail.putExtra("jobId",item);
+        showDetail.putExtra("employerIdToken", employerIdTokens.get(position));
+        showDetail.putExtra("id", ids.get(position));
         startActivity(showDetail);
     }
 
