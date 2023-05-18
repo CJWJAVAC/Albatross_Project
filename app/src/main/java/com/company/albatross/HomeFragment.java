@@ -1,6 +1,7 @@
 package com.company.albatross;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 
@@ -234,7 +235,10 @@ public class HomeFragment extends ListFragment {
         String item = (String) getListAdapter().getItem(position);
 
         // Toast로 출력합니다.
-        Toast.makeText(getActivity(), "선택된 알바: " + item, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "선택된 알바: " + item, Toast.LENGTH_SHORT).show();
+        Intent showDetail = new Intent(mActivity.getApplicationContext(),DetailActivity.class);
+        showDetail.putExtra("jobId",item);
+        startActivity(showDetail);
     }
 
 
