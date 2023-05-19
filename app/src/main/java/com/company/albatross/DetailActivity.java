@@ -34,6 +34,9 @@ public class DetailActivity extends AppCompatActivity {
     String userIdToken;
 
     @Override
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
