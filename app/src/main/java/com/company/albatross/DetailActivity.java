@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-
+//
 public class DetailActivity extends AppCompatActivity {
 
     TextView tv_text;
