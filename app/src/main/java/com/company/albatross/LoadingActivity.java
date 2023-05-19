@@ -100,7 +100,7 @@ public class LoadingActivity extends AppCompatActivity {
                                         String id = idSnapshot.getValue(String.class);
                                         sunIds.add(id);
                                     }
-
+//
                                     // 공통된 id 데이터 찾기
                                     Set<String> commonIds = findCommonIds(monIds, deliveryIds, sunIds);
                                     int i = 0;
