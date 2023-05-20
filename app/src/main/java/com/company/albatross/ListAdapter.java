@@ -31,12 +31,7 @@ public class ListAdapter extends ArrayAdapter<String> {
         TextView textView = view.findViewById(R.id.item_textview);
         textView.setText(item);
 
-        // 아이템의 배경색 변경
-        if (position % 2 == 0) {
-            view.setBackgroundColor(Color.parseColor("#FFE3EE"));
-        } else {
-            view.setBackgroundColor(Color.parseColor("#FFE3EE"));
-        }
+        view.setBackgroundColor(Color.parseColor("#FFE3EE"));
 
         return view;
     }

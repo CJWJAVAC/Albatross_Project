@@ -4,14 +4,18 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:background="@color/red"
-    android:elevation="0dp" >
+    android:elevation="0dp"
+    android:outlineProvider="none">
     <TextView
         android:id="@+id/item_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:textSize="18sp"
-        android:padding="16dp"
+        android:textSize="13sp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="30dp"
         android:background="@drawable/item_shape"/>
 
 </androidx.cardview.widget.CardView>
