@@ -37,6 +37,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -203,6 +206,7 @@ public class HomeFragment extends Fragment {
 //        });
 //    }
 
+
     private void setupRecyclerView() {
         mDatabase= FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
         DatabaseReference idRef = mDatabase.child("ID");
@@ -244,83 +248,202 @@ public class HomeFragment extends Fragment {
         });
     }
     public class Item {
-        public String name;
-        public int imageResId;
+        private String name;
+        private String imageUrl;
 
-        public Item(String name, int imageResId) {
+        public Item(String name, String imageUrl) {
             this.name = name;
-            this.imageResId = imageResId;
+            this.imageUrl = imageUrl;
         }
 
         public String getName() {
             return name;
         }
 
-        public int getImageResId() {
-            return imageResId;
+        public String getImageUrl() {
+            return imageUrl;
         }
     }
+
     private void setupRecyclerView2() {
-        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
-        TypedArray itemImages = getResources().obtainTypedArray(R.array.item_images);
+        mDatabase = FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+        DatabaseReference idRef = mDatabase.child("ID");
+        Query query = idRef.limitToFirst(5);
+        TypedArray itemImages;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList<List2Adapter.Item> items = new ArrayList<>();
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    String key = childSnapshot.getKey();
+                    HashMap<String, String> idValue = (HashMap<String, String>) childSnapshot.getValue();
+                    String name = idValue.get("name") + "\n" +
+                            "시급 " + idValue.get("wage") + "원\n" +
+                            idValue.get("startHour") + "시 ~ " + idValue.get("endHour") + "시\n" +
+                            "경기도 수원시" + idValue.get("region") + "\n" +
+                            idValue.get("phoneNumber");
+                    String imageUrl = idValue.get("image");
+                    items.add(new List2Adapter.Item(name, imageUrl));
+                }
+                List<List2Adapter.Item> listItems2 = new ArrayList<>();
+                for (List2Adapter.Item item : items) {
+                    listItems2.add(item);
+                }
+                List2Adapter adapter = new List2Adapter(listItems2);
+                adapter.setOnItemClickListener(new List2Adapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(String item) {
+                        Intent intent = new Intent(getContext(), DetailActivity.class);
+                        intent.putExtra("item", item);
+                        startActivity(intent);
+                    }
+                });
+                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+                layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
 
-        for (int i = 0; i < itemNames.length(); i++) {
-            String name = itemNames.getString(i);
-            int imageResId = itemImages.getResourceId(i, 0); // 0은 기본값입니다.
-            items2.add(new Item(name, imageResId));
-        }
+                recyclerView2.setLayoutManager(layoutManager);
+                recyclerView2.setAdapter(adapter);
+                recyclerView2.setHasFixedSize(true);
+                recyclerView2.setItemViewCacheSize(2);
+                recyclerView2.setDrawingCacheEnabled(true);
+                recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+            }
 
-        itemNames.recycle();
-        itemImages.recycle();
-
-        List<List2Adapter.Item> listItems2 = new ArrayList<>();
-        for (Item item : items2) {
-            listItems2.add(new List2Adapter.Item(item.getName(), item.getImageResId()));
-        }
-        List2Adapter adapter = new List2Adapter(listItems2);
-
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
-        layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
-
-        recyclerView2.setLayoutManager(layoutManager);
-        recyclerView2.setAdapter(adapter);
-        recyclerView2.setHasFixedSize(true);
-        recyclerView2.setItemViewCacheSize(2);
-        recyclerView2.setDrawingCacheEnabled(true);
-        recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
     }
 
     private void setupRecyclerView3() {
-        ArrayList<Item> items3 = new ArrayList<>();
-        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
-        TypedArray itemImages = getResources().obtainTypedArray(R.array.item_images);
+        mDatabase = FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+        DatabaseReference idRef = mDatabase.child("ID");
+        Query query = idRef.limitToFirst(5);
+        TypedArray itemImages;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList<List3Adapter.Item> items = new ArrayList<>();
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    String key = childSnapshot.getKey();
+                    HashMap<String, String> idValue = (HashMap<String, String>) childSnapshot.getValue();
+                    String name = idValue.get("name") + "\n" +
+                            "시급 " + idValue.get("wage") + "원\n" +
+                            idValue.get("startHour") + "시 ~ " + idValue.get("endHour") + "시\n" +
+                            "경기도 수원시" + idValue.get("region") + "\n" +
+                            idValue.get("phoneNumber");
+                    String imageUrl = idValue.get("image");
+                    items.add(new List3Adapter.Item(name, imageUrl));
+                }
+                List<List3Adapter.Item> listItems2 = new ArrayList<>();
+                for (List3Adapter.Item item : items) {
+                    listItems2.add(item);
+                }
+                List3Adapter adapter = new List3Adapter(listItems2);
+                adapter.setOnItemClickListener(new List3Adapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(String item) {
+                        Intent intent = new Intent(getContext(), DetailActivity.class);
+                        intent.putExtra("item", item);
+                        startActivity(intent);
+                    }
+                });
+                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+                layoutManager.setSpanCount(2);
+                layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
 
-        for (int i = 0; i < itemNames.length(); i++) {
-            String name = itemNames.getString(i);
-            int imageResId = itemImages.getResourceId(i, 0); // 0은 기본값입니다.
-            items3.add(new Item(name, imageResId));
-        }
+                recyclerView3.setLayoutManager(layoutManager);
+                recyclerView3.setAdapter(adapter);
+                recyclerView3.setHasFixedSize(true);
+                recyclerView3.setItemViewCacheSize(2);
+                recyclerView3.setDrawingCacheEnabled(true);
+                recyclerView3.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+            }
 
-        itemNames.recycle();
-        itemImages.recycle();
-
-        List<List3Adapter.Item> listItems3 = new ArrayList<>();
-        for (Item item : items3) {
-            listItems3.add(new List3Adapter.Item(item.getName(), item.getImageResId()));
-        }
-
-        List3Adapter adapter = new List3Adapter(listItems3);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
-        layoutManager.setSpanCount(2);
-        layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
-
-        recyclerView3.setLayoutManager(layoutManager);
-        recyclerView3.setAdapter(adapter);
-        recyclerView3.setHasFixedSize(true);
-        recyclerView3.setItemViewCacheSize(2);
-        recyclerView3.setDrawingCacheEnabled(true);
-        recyclerView3.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
     }
+
+//        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
+//        TypedArray itemImages = getResources().obtainTypedArray(R.array.item_images);
+//
+//        for (int i = 0; i < itemNames.length(); i++) {
+//            String name = itemNames.getString(i);
+//            int imageResId = itemImages.getResourceId(i, 0); // 0은 기본값입니다.
+//            items2.add(new Item(name, imageResId));
+//        }
+//
+//        itemNames.recycle();
+//        itemImages.recycle();
+
+
+
+
+//    private void setupRecyclerView2() {
+//        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
+//        TypedArray itemImages = getResources().obtainTypedArray(R.array.item_images);
+//
+//        for (int i = 0; i < itemNames.length(); i++) {
+//            String name = itemNames.getString(i);
+//            int imageResId = itemImages.getResourceId(i, 0); // 0은 기본값입니다.
+//            items2.add(new Item(name, imageResId));
+//        }
+//
+//        itemNames.recycle();
+//        itemImages.recycle();
+//
+//        List<List2Adapter.Item> listItems2 = new ArrayList<>();
+//        for (Item item : items2) {
+//            listItems2.add(new List2Adapter.Item(item.getName(), item.getImageResId()));
+//        }
+//        List2Adapter adapter = new List2Adapter(listItems2);
+//
+//        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+//        layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+//
+//        recyclerView2.setLayoutManager(layoutManager);
+//        recyclerView2.setAdapter(adapter);
+//        recyclerView2.setHasFixedSize(true);
+//        recyclerView2.setItemViewCacheSize(2);
+//        recyclerView2.setDrawingCacheEnabled(true);
+//        recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+//    }
+
+//    private void setupRecyclerView3() {
+//        ArrayList<Item> items3 = new ArrayList<>();
+//        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
+//        TypedArray itemImages = getResources().obtainTypedArray(R.array.item_images);
+//
+//        for (int i = 0; i < itemNames.length(); i++) {
+//            String name = itemNames.getString(i);
+//            int imageResId = itemImages.getResourceId(i, 0); // 0은 기본값입니다.
+//            items3.add(new Item(name, imageResId));
+//        }
+//
+//        itemNames.recycle();
+//        itemImages.recycle();
+//
+//        List<List3Adapter.Item> listItems3 = new ArrayList<>();
+//        for (Item item : items3) {
+//            listItems3.add(new List3Adapter.Item(item.getName(), item.getImageResId()));
+//        }
+//
+//        List3Adapter adapter = new List3Adapter(listItems3);
+//        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+//        layoutManager.setSpanCount(2);
+//        layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+//
+//        recyclerView3.setLayoutManager(layoutManager);
+//        recyclerView3.setAdapter(adapter);
+//        recyclerView3.setHasFixedSize(true);
+//        recyclerView3.setItemViewCacheSize(2);
+//        recyclerView3.setDrawingCacheEnabled(true);
+//        recyclerView3.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

@@ -10,54 +10,56 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class List3Adapter extends RecyclerView.Adapter<List3Adapter.ViewHolder> {
 
     private List<Item> mItems;
+    private OnItemClickListener mListener;
 
-    public List3Adapter(List<List3Adapter.Item> items2) {
-        mItems = items2;
+    public List3Adapter(List<Item> items) {
+        mItems = items;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
     }
 
     public static class Item {
-        private String mName;
-        private int mImageResId;
+        private String name;
+        private String imageUrl;
 
-        public Item(String name, int imageResId) {
-            mName = name;
-            mImageResId = imageResId;
+        public Item(String name, String imageUrl) {
+            this.name = name;
+            this.imageUrl = imageUrl;
         }
 
         public String getName() {
-            return mName;
+            return name;
         }
 
-        public int getImageResId() {
-            return mImageResId;
+        public String getImageUrl() {
+            return imageUrl;
         }
     }
 
     @NonNull
     @Override
-    public List3Adapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_layout3, parent, false);
-        return new List3Adapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull List3Adapter.ViewHolder holder, int position) {
-        List3Adapter.Item item = mItems.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Item item = mItems.get(position);
         holder.mTextView.setText(item.getName());
-        holder.mImageView.setImageResource(item.getImageResId());
-        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
-        if (position % 2 == 0) {
-            layoutParams.width = (int) (180 * holder.itemView.getContext().getResources().getDisplayMetrics().density);
-        } else {
-            layoutParams.width = (int) (120 * holder.itemView.getContext().getResources().getDisplayMetrics().density);
-        }
-        holder.itemView.setLayoutParams(layoutParams);
+        Glide.with(holder.itemView.getContext())
+                .load(item.getImageUrl())
+                .into(holder.mImageView);
     }
 
     @Override
@@ -65,7 +67,7 @@ public class List3Adapter extends RecyclerView.Adapter<List3Adapter.ViewHolder> 
         return mItems.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mTextView;
         private ImageView mImageView;
@@ -74,14 +76,21 @@ public class List3Adapter extends RecyclerView.Adapter<List3Adapter.ViewHolder> 
             super(itemView);
             mTextView = itemView.findViewById(R.id.item_textview3);
             mImageView = itemView.findViewById(R.id.item_imageview3);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // 아이템 클릭 이벤트 처리
-                    String itemName = mTextView.getText().toString();
-                    Toast.makeText(itemView.getContext(), itemName, Toast.LENGTH_SHORT).show();
-                }
-            });
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            if (mListener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    String item = String.valueOf(mItems.get(position));
+                    mListener.onItemClick(item);
+                }
+            }
+        }
+    }
+    public interface OnItemClickListener {
+        void onItemClick(String item);
     }
 }
