@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,11 +33,10 @@ public class DetailActivity extends AppCompatActivity {
     FirebaseAuth mAuth=FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     String userIdToken;
+    String id;
+    String employerIdToken;
 
     @Override
-
-
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
@@ -45,9 +45,12 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent showDetail = getIntent();
         str = showDetail.getStringExtra("jobId");
-        String employerIdToken=showDetail.getStringExtra("employerIdToken");
+        employerIdToken=showDetail.getStringExtra("employerIdToken");
         userIdToken=currentUser.getUid();
-        String id=showDetail.getStringExtra("id");
+        id=showDetail.getStringExtra("id");
+        Log.i("employerIdToken",employerIdToken );
+        Log.i("id", id);
+        Log.i("userIdToken", userIdToken);
 
         if(showDetail.hasExtra("jobId")){
             tv_text.setText(str);

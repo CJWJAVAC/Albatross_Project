@@ -170,10 +170,10 @@ public class LoadingActivity extends AppCompatActivity {
 
     private static String getTimetableViewInput(HashMap<String, String> hashMapValue){
 //        String timetableViewInput="{'sticker':[";
-        String timetableViewInput="{'idx':"+Integer.toString(timetableViewInputIndex)+",'schedule':[{";
+        String timetableViewInput="{'idx':"+Integer.toString(Integer.parseInt(hashMapValue.get("id")))+",'schedule':[{";
         timetableViewInput+="'classTitle':'"+hashMapValue.get("name")+"',";
         timetableViewInput+="'classPlace':'"+hashMapValue.get("region")+"',";
-        timetableViewInput+="'professorName':'',";
+        timetableViewInput+="'professorName':'"+hashMapValue.get("employerIdToken")+"',";
         timetableViewInput+="'day':";
         switch (hashMapValue.get("day")){
             case "mon":
@@ -203,7 +203,6 @@ public class LoadingActivity extends AppCompatActivity {
         }
         timetableViewInput+=",'startTime':{'hour':"+hashMapValue.get("startHour")+",'minute':"+hashMapValue.get("startMinute")+"},";
         timetableViewInput+="'endTime':{'hour':"+hashMapValue.get("endHour")+",'minute':"+hashMapValue.get("endMinute")+"}}]}";
-        timetableViewInputIndex+=1;
         return timetableViewInput;
     }
 
