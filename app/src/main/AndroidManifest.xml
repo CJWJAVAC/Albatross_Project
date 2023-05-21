@@ -36,9 +36,7 @@
         <activity android:name=".EmployerActivity" />
         <activity android:name=".MypageFragment" />
         <activity android:name=".DetailFragment" />
-<!--        <meta-data-->
-<!--            android:name="com.bumptech.glide.module.AppGlideModule"-->
-<!--            android:value="com.company.albatross.MyAppGlideModule" />-->
+        <activity android:name="ScreenSlidePagerActivity"/>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -100,15 +101,36 @@ public class DetailActivity extends AppCompatActivity {
 //
 //        return rootView;
 //    }
+    TextView tv_text;
+    String str;
+    String mNum;
+    Button mCall;
+    private DatabaseReference mDatabase;
+    FirebaseAuth mAuth=FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    String userIdToken;
+    String id;
+    String employerIdToken;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        tv_text = findViewById(R.id.tv_text);
+
+        Intent showDetail = getIntent();
+        str = showDetail.getStringExtra("jobId");
+        employerIdToken=showDetail.getStringExtra("employerIdToken");
+        userIdToken=currentUser.getUid();
+        id=showDetail.getStringExtra("id");
+        Log.i("employerIdToken",employerIdToken );
+        Log.i("id", id);
+        Log.i("userIdToken", userIdToken);
 
         // Fragment 추가
         if (savedInstanceState == null) {
             DetailFragment detailFragment = new DetailFragment();
             detailFragment.setArguments(getIntent().getExtras());
-
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, detailFragment)
                     .commit();
