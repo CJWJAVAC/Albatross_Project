@@ -1277,6 +1277,7 @@ public class InputActivity extends AppCompatActivity {
     void writeDB(String employerIdToken, String id, String name, String job, String day, String startHour, String startMinute, String endHour, String endMinute, String phoneNumber, String region, String wage) {
 
         // ID
+        mDatabase.child("ID").child(id).child("id").setValue(id);
         mDatabase.child("ID").child(id).child("employerIdToken").setValue(employerIdToken);
         mDatabase.child("ID").child(id).child("name").setValue(name);
         mDatabase.child("ID").child(id).child("job").setValue(job);
