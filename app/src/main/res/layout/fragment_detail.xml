@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:gravity="center"-->
+<!--    android:orientation="vertical">-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/item_name_textview"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        android:textStyle="bold" />-->
+
+<!--</LinearLayout>-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:id="@+id/item_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/item_shape"
+        android:padding="16dp"
+        android:textSize="13sp"
+        android:textColor="@color/black" />
+
+    <!-- 모집조건 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/item_shape"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="모집조건"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/recruitment_condition_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="모집기간"
+            android:textColor="@color/colorGray" />
+        <TextView
+            android:id="@+id/recruitment_condition_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="성별"
+            android:textColor="@color/colorGray" />
+        <TextView
+            android:id="@+id/recruitment_condition_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="연령"
+            android:textColor="@color/colorGray" />
+        <TextView
+            android:id="@+id/recruitment_condition_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="학력"
+            android:textColor="@color/colorGray" />
+
+    </LinearLayout>
+
+    <!-- 근무조건 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/item_shape"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="근무조건"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/working_condition_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="급여"
+            android:textColor="@color/colorGray" />
+        <TextView
+            android:id="@+id/recruitment_condition_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="근무기간"
+            android:textColor="@color/colorGray" />
+        <TextView
+            android:id="@+id/recruitment_condition_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="근무요일"
+            android:textColor="@color/colorGray" />
+        <TextView
+            android:id="@+id/recruitment_condition_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="근무시간"
+            android:textColor="@color/colorGray" />
+
+    </LinearLayout>
+
+    <!-- 모집내용 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/item_shape"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="모집내용"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/recruitment_content_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="모집직종"
+            android:textColor="@color/colorGray" />
+        <TextView
+            android:id="@+id/recruitment_content_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="모집인원"
+            android:textColor="@color/colorGray" />
+        <TextView
+            android:id="@+id/recruitment_content_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="고용형태"
+            android:textColor="@color/colorGray" />
+
+    </LinearLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_margin="20dp">
+        <Button
+            android:id="@+id/btn_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="전화걸기"
+            app:layout_constraintEnd_toStartOf="@id/btn_application"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0" />
+
+        <Button
+            android:id="@+id/btn_application"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="50dp"
+            android:text="신청하기"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_call"
+            app:layout_constraintHorizontal_bias="0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

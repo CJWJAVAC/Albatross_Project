@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="item_images">
+        <item>@drawable/coupanglogo</item>
+        <item>@drawable/wemakepricelogo</item>
+        <item>@drawable/wooribank</item>
+        <item>@drawable/goodchoicelogo</item>
+        <item>@drawable/coupanglogo</item>
+        <item>@drawable/wemakepricelogo</item>
+        <item>@drawable/wooribank</item>
+        <item>@drawable/goodchoicelogo</item>
+    </array>
+</resources>
