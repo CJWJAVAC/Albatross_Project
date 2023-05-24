@@ -55,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
         mCall.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
-                mNum = str.substring(str.length()-11,str.length());
+                mNum = str.substring(str.length()-13,str.length());
                 String tel = "tel:"+mNum;
                 Uri uri = Uri.parse(tel);
                 Intent callIntent = new Intent(Intent.ACTION_DIAL,uri);

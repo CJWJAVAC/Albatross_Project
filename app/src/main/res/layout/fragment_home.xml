@@ -4,11 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <androidx.appcompat.widget.SearchView
+    <EditText
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/MySearchViewStyle" />
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:background="@color/white"
+        android:hint="검색어를 입력하세요" />
 
     <FrameLayout
         android:layout_width="match_parent"

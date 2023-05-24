@@ -14,10 +14,16 @@ import java.util.ArrayList;
 
 public class ListAdapter extends ArrayAdapter<String> {
     private Context mContext;
+    private ArrayList<String> filteredItems;
 
     public ListAdapter(Context context, ArrayList<String> items) {
         super(context, 0, items);
         mContext = context;
+    }
+
+    public void setFilteredList(ArrayList<String> filteredItems) {
+        this.filteredItems = filteredItems;
+        notifyDataSetChanged(); // 데이터 변경을 알려 어댑터를 갱신
     }
 
     @Override
@@ -40,4 +46,6 @@ public class ListAdapter extends ArrayAdapter<String> {
 
         return view;
     }
+
+
 }
