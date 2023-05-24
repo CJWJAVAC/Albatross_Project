@@ -104,6 +104,10 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+//        Intent intent = getIntent();
+//        String id = intent.getStringExtra("id");
+
+
         // Fragment 추가
         if (savedInstanceState == null) {
             DetailFragment detailFragment = new DetailFragment();
@@ -113,5 +117,6 @@ public class DetailActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, detailFragment)
                     .commit();
         }
+
     }
 }

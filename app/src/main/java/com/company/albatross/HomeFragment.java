@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -78,6 +79,9 @@ public class HomeFragment extends Fragment {
     private DatabaseReference mDatabase;
     private ArrayList<String> employerIdTokens = new ArrayList<>();
     private ArrayList<String> ids=new ArrayList<>();
+
+    private ArrayList<String> id = new ArrayList<>();
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -220,6 +224,9 @@ public class HomeFragment extends Fragment {
                     HashMap<String, String> idValue =(HashMap<String, String>) childSnapshot.getValue();
                     employerIdTokens.add(idValue.get("employerIdToken"));
                     items.add(idValue.get("name")+"\n"+"시급 "+idValue.get("wage")+"원\n"+idValue.get("startHour")+"시 ~ "+idValue.get("endHour")+"시\n"+ "경기도 수원시" + idValue.get("region")+"\n"+idValue.get("phoneNumber"));
+
+//                    id.add(idValue.get("id"));
+
                 }
                 List1Adapter adapter = new List1Adapter(items);
                 adapter.setOnItemClickListener(new List1Adapter.OnItemClickListener() {
@@ -227,6 +234,9 @@ public class HomeFragment extends Fragment {
                     public void onItemClick(String item) {
                         Intent intent = new Intent(getContext(), DetailActivity.class);
                         intent.putExtra("item", item);
+
+//                        intent.putExtra("id", id);
+
                         startActivity(intent);
                     }
                 });
@@ -270,6 +280,7 @@ public class HomeFragment extends Fragment {
         DatabaseReference idRef = mDatabase.child("ID");
         Query query = idRef.limitToFirst(5);
         TypedArray itemImages;
+
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -336,11 +347,11 @@ public class HomeFragment extends Fragment {
                     String imageUrl = idValue.get("image");
                     items.add(new List3Adapter.Item(name, imageUrl));
                 }
-                List<List3Adapter.Item> listItems2 = new ArrayList<>();
+                List<List3Adapter.Item> listItems3 = new ArrayList<>();
                 for (List3Adapter.Item item : items) {
-                    listItems2.add(item);
+                    listItems3.add(item);
                 }
-                List3Adapter adapter = new List3Adapter(listItems2);
+                List3Adapter adapter = new List3Adapter(listItems3);
                 adapter.setOnItemClickListener(new List3Adapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(String item) {
@@ -349,7 +360,7 @@ public class HomeFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
                 layoutManager.setSpanCount(2);
                 layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
 
