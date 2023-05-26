@@ -36,7 +36,9 @@
         <activity android:name=".EmployerActivity" />
         <activity android:name=".MypageFragment" />
         <activity android:name=".DetailFragment" />
-        <activity android:name="ScreenSlidePagerActivity"/>
+        <activity android:name=".ScreenSlidePagerActivity"/>
+        <activity android:name=".ApplicationStatusActivity"/>
+        <activity android:name=".UpdateMyDataActivity"/>
     </application>
 
 </manifest>
