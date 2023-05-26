@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -90,6 +91,17 @@ public class HomeFragment extends Fragment {
     private ArrayList<String> items;
     private ArrayList<String> filteredItems;
 
+
+    private ArrayList<String> id = new ArrayList<>();
+    private ArrayList<String> wage = new ArrayList<>();
+    private ArrayList<String> time = new ArrayList<>();
+    private ArrayList<String> pnum = new ArrayList<>();
+    private ArrayList<String> period = new ArrayList<>();
+    private ArrayList<String> gender = new ArrayList<>();
+    private ArrayList<String> age = new ArrayList<>();
+    private ArrayList<String> education = new ArrayList<>();
+    private ArrayList<String> eperiod = new ArrayList<>();
+    private ArrayList<String> day2 = new ArrayList<>();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -212,9 +224,22 @@ public class HomeFragment extends Fragment {
                 items = new ArrayList<>();
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     ids.add(childSnapshot.getKey());
-                    HashMap<String, String> idValue = (HashMap<String, String>) childSnapshot.getValue();
+                    //String childId = childSnapshot.getKey();
+
+                    HashMap<String, String> idValue =(HashMap<String, String>) childSnapshot.getValue();
                     employerIdTokens.add(idValue.get("employerIdToken"));
-                    items.add(idValue.get("name") + "\n" + "시급 " + idValue.get("wage") + "원\n" + idValue.get("startHour") + "시 ~ " + idValue.get("endHour") + "시\n" + "경기도 수원시" + idValue.get("region") + "\n" + idValue.get("phoneNumber"));
+                    items.add(idValue.get("name")+"\n"+"시급 "+idValue.get("wage")+"원\n"+idValue.get("startHour")+"시 ~ "+idValue.get("endHour")+"시\n"+ "경기도 수원시" + idValue.get("region")+"\n"+idValue.get("phoneNumber"));
+
+                    //id.add(idValue.get("id"));
+                    wage.add("시급 "+idValue.get("wage"));
+                    time.add(idValue.get("startHour")+":"+idValue.get("startMinute")+"~"+idValue.get("endHour")+":"+idValue.get("endMinute"));
+                    pnum.add(idValue.get("phoneNumber"));
+                    period.add(idValue.get("period"));
+                    gender.add(idValue.get("gender"));
+                    age.add(idValue.get("age"));
+                    education.add(idValue.get("education"));
+                    eperiod.add(idValue.get("eperiod"));
+                    day2.add(idValue.get("day2"));
                 }
 
                 adapter = new ListAdapter(mActivity, items);
@@ -239,9 +264,21 @@ public class HomeFragment extends Fragment {
                 List1Adapter adapter = new List1Adapter(items);
                 adapter.setOnItemClickListener(new List1Adapter.OnItemClickListener() {
                     @Override
-                    public void onItemClick(String item) {
+                    public void onItemClick(String item, int position) {
                         Intent intent = new Intent(getContext(), DetailActivity.class);
                         intent.putExtra("item", item);
+
+                        //intent.putExtra("id", id.get(position));
+                        intent.putExtra("wage", wage.get(position));
+                        intent.putExtra("time", time.get(position));
+                        intent.putExtra("phoneNumber", pnum.get(position));
+                        intent.putExtra("period", period.get(position));
+                        intent.putExtra("gender", gender.get(position));
+                        intent.putExtra("age", age.get(position));
+                        intent.putExtra("education", education.get(position));
+                        intent.putExtra("eperiod", eperiod.get(position));
+                        intent.putExtra("day2", day2.get(position));
+
                         startActivity(intent);
                     }
                 });
@@ -285,6 +322,7 @@ public class HomeFragment extends Fragment {
         DatabaseReference idRef = mDatabase.child("ID");
         Query query = idRef.limitToFirst(5);
         TypedArray itemImages;
+
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -358,11 +396,11 @@ public class HomeFragment extends Fragment {
                     String imageUrl = idValue.get("image");
                     items.add(new List3Adapter.Item(name, imageUrl));
                 }
-                List<List3Adapter.Item> listItems2 = new ArrayList<>();
+                List<List3Adapter.Item> listItems3 = new ArrayList<>();
                 for (List3Adapter.Item item : items) {
-                    listItems2.add(item);
+                    listItems3.add(item);
                 }
-                List3Adapter adapter = new List3Adapter(listItems2);
+                List3Adapter adapter = new List3Adapter(listItems3);
                 adapter.setOnItemClickListener(new List3Adapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(String item) {
@@ -371,7 +409,7 @@ public class HomeFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
                 layoutManager.setSpanCount(2);
                 layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
 

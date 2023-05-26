@@ -1,6 +1,7 @@
 package com.company.albatross;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,14 @@ import com.bumptech.glide.module.AppGlideModule;
 import com.bumptech.glide.module.LibraryGlideModule;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -70,22 +79,24 @@ public class List2Adapter extends RecyclerView.Adapter<List2Adapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Item item = mItems.get(position);
         holder.mTextView.setText(item.getName());
-        Glide.with(holder.itemView.getContext())
-                .load(item.getImageUrl())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        Log.e("Glide", "Image load failed: " + e.getMessage());
-                        return false;
-                    }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        Log.d("Glide", "Image load successful");
-                        return false;
-                    }
-                })
-                .into(holder.mImageView);
+        String gsUrl = item.getImageUrl();
+        // gs:// URL을 그대로 사용하여 이미지 로드
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(gsUrl);
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String imageUrl = uri.toString();
+                // Picasso를 사용하여 이미지 로드
+                Picasso.get().load(imageUrl).into(holder.mImageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // 이미지 로드 실패 시 처리
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -110,8 +121,8 @@ public class List2Adapter extends RecyclerView.Adapter<List2Adapter.ViewHolder> 
             if (mListener != null) {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    String item = String.valueOf(mItems.get(position));
-                    mListener.onItemClick(item);
+                    String name = mTextView.getText().toString();
+                    mListener.onItemClick(name);
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.company.albatross;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,6 +32,7 @@ public class List3Adapter extends RecyclerView.Adapter<List3Adapter.ViewHolder> 
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
     }
+
 
     public static class Item {
         private String name;
@@ -45,6 +52,7 @@ public class List3Adapter extends RecyclerView.Adapter<List3Adapter.ViewHolder> 
         }
     }
 
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -57,9 +65,24 @@ public class List3Adapter extends RecyclerView.Adapter<List3Adapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Item item = mItems.get(position);
         holder.mTextView.setText(item.getName());
-        Glide.with(holder.itemView.getContext())
-                .load(item.getImageUrl())
-                .into(holder.mImageView);
+
+        String gsUrl = item.getImageUrl();
+        // gs:// URL을 그대로 사용하여 이미지 로드
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(gsUrl);
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String imageUrl = uri.toString();
+                // Picasso를 사용하여 이미지 로드
+                Picasso.get().load(imageUrl).into(holder.mImageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // 이미지 로드 실패 시 처리
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -84,8 +107,8 @@ public class List3Adapter extends RecyclerView.Adapter<List3Adapter.ViewHolder> 
             if (mListener != null) {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    String item = String.valueOf(mItems.get(position));
-                    mListener.onItemClick(item);
+                    String name = mTextView.getText().toString();
+                    mListener.onItemClick(name);
                 }
             }
         }
