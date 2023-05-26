@@ -49,11 +49,32 @@ public class DetailFragment extends Fragment {
     FirebaseUser currentUser = mAuth.getCurrentUser();
     String userIdToken;
     private TextView mItemTextView;
+    private TextView itemIdTextView;
+    private TextView wageTextView;
+    private TextView timeTextView;
+    //private TextView pnumTextView;
+    private TextView periodTextView;
+    private TextView genderTextView;
+    private TextView ageTextView;
+    private TextView educationTextView;
+    private TextView eperiodTextView;
+    private TextView day2TextView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mItemTextView = rootView.findViewById(R.id.item_textview);
+
+        //itemIdTextView = rootView.findViewById(R.id.item_Id_textview);
+        wageTextView = rootView.findViewById(R.id.wage_text);
+        timeTextView = rootView.findViewById(R.id.time_text);
+        periodTextView = rootView.findViewById(R.id.period_text);
+        genderTextView = rootView.findViewById(R.id.gender_text);
+        ageTextView = rootView.findViewById(R.id.age_text);
+        educationTextView = rootView.findViewById(R.id.education_text);
+        eperiodTextView = rootView.findViewById(R.id.eperiod_text);
+        day2TextView = rootView.findViewById(R.id.day2_text);
 
 
 
@@ -83,6 +104,30 @@ public class DetailFragment extends Fragment {
         String employerIdToken = showDetail.getStringExtra("employerIdToken");
         userIdToken = currentUser.getUid();
         String id = showDetail.getStringExtra("id");
+        String wage = showDetail.getStringExtra("wage");
+        String time = showDetail.getStringExtra("time");
+        String period = showDetail.getStringExtra("period");
+        String gender = showDetail.getStringExtra("gender");
+        String age = showDetail.getStringExtra("age");
+        String education = showDetail.getStringExtra("education");
+        String eperiod = showDetail.getStringExtra("eperiod");
+        String day2 = showDetail.getStringExtra("day2");
+
+
+
+        //itemIdTextView.setText(id);
+        wageTextView.setText(wage);
+        timeTextView.setText(time);
+        periodTextView.setText(period);
+        genderTextView.setText(gender);
+        ageTextView.setText(age);
+        educationTextView.setText(education);
+        eperiodTextView.setText(eperiod);
+        day2TextView.setText(day2);
+
+
+
+
 
         Button mCall = rootView.findViewById(R.id.btn_call);
         Button mApplication = rootView.findViewById(R.id.btn_application);
@@ -90,8 +135,10 @@ public class DetailFragment extends Fragment {
         mCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNum = str.substring(str.length() - 11, str.length());
-                String tel = "tel:" + mNum;
+//                mNum = str.substring(str.length() - 11, str.length());
+//                String tel = "tel:" + mNum;
+                String pnum = showDetail.getStringExtra("phoneNumber");
+                String tel = "tel:" + pnum;
                 Uri uri = Uri.parse(tel);
                 Intent callIntent = new Intent(Intent.ACTION_DIAL, uri);
                 startActivity(callIntent);
@@ -110,10 +157,13 @@ public class DetailFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             String item = args.getString("item");
+            //String time = args.getString("time");
             if (item != null) {
                 mItemTextView.setText(item);
+                //timeTextView.setText(time);
             }
         }
+
 
         return rootView;
     }

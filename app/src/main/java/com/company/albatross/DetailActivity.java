@@ -116,16 +116,19 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        tv_text = findViewById(R.id.tv_text);
+//        tv_text = findViewById(R.id.tv_text);
 
-        Intent showDetail = getIntent();
-        str = showDetail.getStringExtra("jobId");
-        employerIdToken=showDetail.getStringExtra("employerIdToken");
-        userIdToken=currentUser.getUid();
-        id=showDetail.getStringExtra("id");
-        Log.i("employerIdToken",employerIdToken );
-        Log.i("id", id);
-        Log.i("userIdToken", userIdToken);
+//        Intent showDetail = getIntent();
+//        str = showDetail.getStringExtra("jobId");
+//        employerIdToken=showDetail.getStringExtra("employerIdToken");
+//        userIdToken=currentUser.getUid();
+//        id=showDetail.getStringExtra("id");
+
+//        Log.i("employerIdToken",employerIdToken );
+//        Log.i("id", id);
+//        Log.i("userIdToken", userIdToken);
+
+
 
 //        Intent intent = getIntent();
 //        String id = intent.getStringExtra("id");

@@ -81,7 +81,15 @@ public class HomeFragment extends Fragment {
     private ArrayList<String> ids=new ArrayList<>();
 
     private ArrayList<String> id = new ArrayList<>();
-
+    private ArrayList<String> wage = new ArrayList<>();
+    private ArrayList<String> time = new ArrayList<>();
+    private ArrayList<String> pnum = new ArrayList<>();
+    private ArrayList<String> period = new ArrayList<>();
+    private ArrayList<String> gender = new ArrayList<>();
+    private ArrayList<String> age = new ArrayList<>();
+    private ArrayList<String> education = new ArrayList<>();
+    private ArrayList<String> eperiod = new ArrayList<>();
+    private ArrayList<String> day2 = new ArrayList<>();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -221,21 +229,41 @@ public class HomeFragment extends Fragment {
                 ArrayList<String> items = new ArrayList<>();
                 for(DataSnapshot childSnapshot : snapshot.getChildren()){
                     ids.add(childSnapshot.getKey());
+                    //String childId = childSnapshot.getKey();
+
                     HashMap<String, String> idValue =(HashMap<String, String>) childSnapshot.getValue();
                     employerIdTokens.add(idValue.get("employerIdToken"));
                     items.add(idValue.get("name")+"\n"+"시급 "+idValue.get("wage")+"원\n"+idValue.get("startHour")+"시 ~ "+idValue.get("endHour")+"시\n"+ "경기도 수원시" + idValue.get("region")+"\n"+idValue.get("phoneNumber"));
 
-//                    id.add(idValue.get("id"));
+                    //id.add(idValue.get("id"));
+                    wage.add("시급 "+idValue.get("wage"));
+                    time.add(idValue.get("startHour")+":"+idValue.get("startMinute")+"~"+idValue.get("endHour")+":"+idValue.get("endMinute"));
+                    pnum.add(idValue.get("phoneNumber"));
+                    period.add(idValue.get("period"));
+                    gender.add(idValue.get("gender"));
+                    age.add(idValue.get("age"));
+                    education.add(idValue.get("education"));
+                    eperiod.add(idValue.get("eperiod"));
+                    day2.add(idValue.get("day2"));
 
                 }
                 List1Adapter adapter = new List1Adapter(items);
                 adapter.setOnItemClickListener(new List1Adapter.OnItemClickListener() {
                     @Override
-                    public void onItemClick(String item) {
+                    public void onItemClick(String item, int position) {
                         Intent intent = new Intent(getContext(), DetailActivity.class);
                         intent.putExtra("item", item);
 
-//                        intent.putExtra("id", id);
+                        //intent.putExtra("id", id.get(position));
+                        intent.putExtra("wage", wage.get(position));
+                        intent.putExtra("time", time.get(position));
+                        intent.putExtra("phoneNumber", pnum.get(position));
+                        intent.putExtra("period", period.get(position));
+                        intent.putExtra("gender", gender.get(position));
+                        intent.putExtra("age", age.get(position));
+                        intent.putExtra("education", education.get(position));
+                        intent.putExtra("eperiod", eperiod.get(position));
+                        intent.putExtra("day2", day2.get(position));
 
                         startActivity(intent);
                     }
