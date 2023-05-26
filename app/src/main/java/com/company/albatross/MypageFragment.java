@@ -67,19 +67,6 @@ public class MypageFragment extends ListFragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_mypage, container, false);
 
-        /*String[] values = new String[]{"내정보\n\n\n\n\n\n\n\n\n\n\n\n\n", "내 시간표\n\n\n\n\n\n\n\n\n\n\n\n\n"};
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, values);
-        setListAdapter(adapter);
-
-        ListView listView = rootView.findViewById(android.R.id.list);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });*/
 
         return rootView;
         //return inflater.inflate(R.layout.fragment_mypage, container, false);
@@ -88,17 +75,6 @@ public class MypageFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-//        switch (position) {
-//            case 0:
-//                Intent intent = new Intent(getActivity(), MypageSub1.class);
-//                startActivity(intent);
-//                break;
-//            case 1:
-//                Intent intent2 = new Intent(getActivity(), MypageSub1.class);
-//                startActivity(intent2);
-//                break;
-//            default:
-//                break;
-//        }
+
     }
 }

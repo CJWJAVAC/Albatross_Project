@@ -9,7 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 //import android.support.v4.content.ContextCompat;
@@ -38,6 +41,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,7 +58,7 @@ import kotlinx.coroutines.Job;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends ListFragment {
+public class HomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,22 +67,21 @@ public class HomeFragment extends ListFragment {
     private static final String KEY_CURRENT_ITEM = "current_item";
     private static final String KEY_LIST_STATE = "list_state";
     private static final int SLIDESHOW_DELAY_MS = 3000;
-
+    private RecyclerView recyclerView1;
+    private RecyclerView recyclerView2;
+    private RecyclerView recyclerView3;
     private static final int[] IMAGES = {R.drawable.banner1, R.drawable.banner2, R.drawable.banner3};
     private int currentItem = 0;
     private ImageView imageView;
     private Thread slideThread = null;
     private Timer timer;
     private FragmentActivity mActivity;
-
+    ArrayList<Item> items2 = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-
     private DatabaseReference mDatabase;
-
     private ArrayList<String> employerIdTokens = new ArrayList<>();
     private ArrayList<String> ids = new ArrayList<>();
 
@@ -89,20 +94,16 @@ public class HomeFragment extends ListFragment {
     public HomeFragment() {
         // Required empty public constructor
     }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = getActivity();
     }
-
     @Override
     public void onDetach() {
         super.onDetach();
         mActivity = null;
     }
-
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -121,7 +122,6 @@ public class HomeFragment extends ListFragment {
         return fragment;
     }
 
-
     public void startTimer() {
         TimerTask task = new TimerTask() {
             @Override
@@ -139,28 +139,18 @@ public class HomeFragment extends ListFragment {
         Timer timer = new Timer();
         timer.schedule(task, 0, 1000);
     }
-
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null) {
-            Parcelable listState = savedInstanceState.getParcelable(KEY_LIST_STATE);
-            getListView().onRestoreInstanceState(listState);
-        }
     }
-
     @Override
     public void onResume() {
         super.onResume();
-
         startSlideshow();
-        //setupListView();
     }
-
     @Override
     public void onPause() {
         super.onPause();
-
         stopSlideshow();
     }
 
@@ -177,7 +167,6 @@ public class HomeFragment extends ListFragment {
             slideThread = null;
         }
     }
-
     private void startSlideshow() {
         slideThread = new Thread(new Runnable() {
             @Override
@@ -208,8 +197,13 @@ public class HomeFragment extends ListFragment {
         }
     }
 
-    private void setupListView() {
-        mDatabase = FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+
+//     private void setupListView() {
+
+
+    private void setupRecyclerView() {
+        mDatabase= FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+
         DatabaseReference idRef = mDatabase.child("ID");
         Query query = idRef.limitToFirst(5);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -222,6 +216,7 @@ public class HomeFragment extends ListFragment {
                     employerIdTokens.add(idValue.get("employerIdToken"));
                     items.add(idValue.get("name") + "\n" + "시급 " + idValue.get("wage") + "원\n" + idValue.get("startHour") + "시 ~ " + idValue.get("endHour") + "시\n" + "경기도 수원시" + idValue.get("region") + "\n" + idValue.get("phoneNumber"));
                 }
+
                 adapter = new ListAdapter(mActivity, items);
                 adapter.setFilteredList(items);
                 setListAdapter(adapter);
@@ -240,6 +235,94 @@ public class HomeFragment extends ListFragment {
                         filterList(editable.toString());
                     }
                 });
+
+                List1Adapter adapter = new List1Adapter(items);
+                adapter.setOnItemClickListener(new List1Adapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(String item) {
+                        Intent intent = new Intent(getContext(), DetailActivity.class);
+                        intent.putExtra("item", item);
+                        startActivity(intent);
+                    }
+                });
+
+                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+                layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+
+                recyclerView1.setLayoutManager(layoutManager);
+                recyclerView1.setAdapter(adapter);
+                recyclerView1.setHasFixedSize(true);
+                recyclerView1.setItemViewCacheSize(2);
+                recyclerView1.setDrawingCacheEnabled(true);
+                recyclerView1.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+    }
+    public class Item {
+        private String name;
+        private String imageUrl;
+
+        public Item(String name, String imageUrl) {
+            this.name = name;
+            this.imageUrl = imageUrl;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+    }
+
+    private void setupRecyclerView2() {
+        mDatabase = FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+        DatabaseReference idRef = mDatabase.child("ID");
+        Query query = idRef.limitToFirst(5);
+        TypedArray itemImages;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList<List2Adapter.Item> items = new ArrayList<>();
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    String key = childSnapshot.getKey();
+                    HashMap<String, String> idValue = (HashMap<String, String>) childSnapshot.getValue();
+                    String name = idValue.get("name") + "\n" +
+                            "시급 " + idValue.get("wage") + "원\n" +
+                            idValue.get("startHour") + "시 ~ " + idValue.get("endHour") + "시\n" +
+                            "경기도 수원시" + idValue.get("region") + "\n" +
+                            idValue.get("phoneNumber");
+                    String imageUrl = idValue.get("image");
+                    items.add(new List2Adapter.Item(name, imageUrl));
+                }
+                List<List2Adapter.Item> listItems2 = new ArrayList<>();
+                for (List2Adapter.Item item : items) {
+                    listItems2.add(item);
+                }
+                List2Adapter adapter = new List2Adapter(listItems2);
+                adapter.setOnItemClickListener(new List2Adapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(String item) {
+                        Intent intent = new Intent(getContext(), DetailActivity.class);
+                        intent.putExtra("item", item);
+                        startActivity(intent);
+                    }
+                });
+                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+                layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+
+                recyclerView2.setLayoutManager(layoutManager);
+                recyclerView2.setAdapter(adapter);
+                recyclerView2.setHasFixedSize(true);
+                recyclerView2.setItemViewCacheSize(2);
+                recyclerView2.setDrawingCacheEnabled(true);
+                recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
             }
 
             @Override
@@ -249,19 +332,146 @@ public class HomeFragment extends ListFragment {
         });
     }
 
+
     private void filterList(String searchText) {
         ListAdapter adapter = (ListAdapter) getListAdapter();
         adapter.getFilter().filter(searchText);
     }
 
+    private void setupRecyclerView3() {
+        mDatabase = FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+        DatabaseReference idRef = mDatabase.child("ID");
+        Query query = idRef.limitToFirst(5);
+        TypedArray itemImages;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList<List3Adapter.Item> items = new ArrayList<>();
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    String key = childSnapshot.getKey();
+                    HashMap<String, String> idValue = (HashMap<String, String>) childSnapshot.getValue();
+                    String name = idValue.get("name") + "\n" +
+                            "시급 " + idValue.get("wage") + "원\n" +
+                            idValue.get("startHour") + "시 ~ " + idValue.get("endHour") + "시\n" +
+                            "경기도 수원시" + idValue.get("region") + "\n" +
+                            idValue.get("phoneNumber");
+                    String imageUrl = idValue.get("image");
+                    items.add(new List3Adapter.Item(name, imageUrl));
+                }
+                List<List3Adapter.Item> listItems2 = new ArrayList<>();
+                for (List3Adapter.Item item : items) {
+                    listItems2.add(item);
+                }
+                List3Adapter adapter = new List3Adapter(listItems2);
+                adapter.setOnItemClickListener(new List3Adapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(String item) {
+                        Intent intent = new Intent(getContext(), DetailActivity.class);
+                        intent.putExtra("item", item);
+                        startActivity(intent);
+                    }
+                });
+                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+                layoutManager.setSpanCount(2);
+                layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+
+                recyclerView3.setLayoutManager(layoutManager);
+                recyclerView3.setAdapter(adapter);
+                recyclerView3.setHasFixedSize(true);
+                recyclerView3.setItemViewCacheSize(2);
+                recyclerView3.setDrawingCacheEnabled(true);
+                recyclerView3.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+    }
+
+//        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
+//        TypedArray itemImages = getResources().obtainTypedArray(R.array.item_images);
+//
+//        for (int i = 0; i < itemNames.length(); i++) {
+//            String name = itemNames.getString(i);
+//            int imageResId = itemImages.getResourceId(i, 0); // 0은 기본값입니다.
+//            items2.add(new Item(name, imageResId));
+//        }
+//
+//        itemNames.recycle();
+//        itemImages.recycle();
+
+
+
+
+//    private void setupRecyclerView2() {
+//        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
+//        TypedArray itemImages = getResources().obtainTypedArray(R.array.item_images);
+//
+//        for (int i = 0; i < itemNames.length(); i++) {
+//            String name = itemNames.getString(i);
+//            int imageResId = itemImages.getResourceId(i, 0); // 0은 기본값입니다.
+//            items2.add(new Item(name, imageResId));
+//        }
+//
+//        itemNames.recycle();
+//        itemImages.recycle();
+//
+//        List<List2Adapter.Item> listItems2 = new ArrayList<>();
+//        for (Item item : items2) {
+//            listItems2.add(new List2Adapter.Item(item.getName(), item.getImageResId()));
+//        }
+//        List2Adapter adapter = new List2Adapter(listItems2);
+//
+//        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+//        layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+//
+//        recyclerView2.setLayoutManager(layoutManager);
+//        recyclerView2.setAdapter(adapter);
+//        recyclerView2.setHasFixedSize(true);
+//        recyclerView2.setItemViewCacheSize(2);
+//        recyclerView2.setDrawingCacheEnabled(true);
+//        recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+//    }
+
+//    private void setupRecyclerView3() {
+//        ArrayList<Item> items3 = new ArrayList<>();
+//        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
+//        TypedArray itemImages = getResources().obtainTypedArray(R.array.item_images);
+//
+//        for (int i = 0; i < itemNames.length(); i++) {
+//            String name = itemNames.getString(i);
+//            int imageResId = itemImages.getResourceId(i, 0); // 0은 기본값입니다.
+//            items3.add(new Item(name, imageResId));
+//        }
+//
+//        itemNames.recycle();
+//        itemImages.recycle();
+//
+//        List<List3Adapter.Item> listItems3 = new ArrayList<>();
+//        for (Item item : items3) {
+//            listItems3.add(new List3Adapter.Item(item.getName(), item.getImageResId()));
+//        }
+//
+//        List3Adapter adapter = new List3Adapter(listItems3);
+//        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+//        layoutManager.setSpanCount(2);
+//        layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+//
+//        recyclerView3.setLayoutManager(layoutManager);
+//        recyclerView3.setAdapter(adapter);
+//        recyclerView3.setHasFixedSize(true);
+//        recyclerView3.setItemViewCacheSize(2);
+//        recyclerView3.setDrawingCacheEnabled(true);
+//        recyclerView3.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+//    }
+
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CURRENT_ITEM, currentItem);
-
-        // 리스트 뷰의 스크롤 위치를 저장합니다.
-        ListView listView = getListView();
-        outState.putParcelable(KEY_LIST_STATE, listView.onSaveInstanceState());
     }
 
     @Override
@@ -282,12 +492,16 @@ public class HomeFragment extends ListFragment {
 
         imageView = rootView.findViewById(R.id.image1);
 
-        setupListView();
+        //setupListView();
 
+        recyclerView1 = rootView.findViewById(R.id.recyclerView1);
+        setupRecyclerView();
 
-        return rootView;
-        //return inflater.inflate(R.layout.fragment_home, container, false);
-    }
+        recyclerView2 = rootView.findViewById(R.id.recyclerView2);
+        setupRecyclerView2();
+
+        recyclerView3 = rootView.findViewById(R.id.recyclerView3);
+        setupRecyclerView3();
 
 
     @Override
@@ -346,6 +560,10 @@ public class HomeFragment extends ListFragment {
             }
         }
         adapter.setFilteredList(filteredItems);
+    }
+
+        return rootView;
+        //return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
 }
