@@ -17,6 +17,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScreenSlidePageFragment extends Fragment {
     private TextView tv_text;
@@ -71,7 +73,11 @@ public class ScreenSlidePageFragment extends Fragment {
             @Override
             public void onClick(android.view.View v){
                 mDatabase= FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
-                mDatabase.child("Notif").child(employerId).child(id).push().setValue(userIdToken);
+                Map<String, String> insertData=new HashMap<>();
+                insertData.put("jobId", id);
+                insertData.put("userId", userIdToken);
+                insertData.put("state", "reviewing");
+                mDatabase.child("Notif").child(employerId).push().setValue(insertData);
             }
         });
         return view;
