@@ -42,7 +42,7 @@
         android:layout_height="94dp"
         android:layout_margin="8dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/mypageimage"
+        android:src="@drawable/mydata"
         android:background="@drawable/item_shape"></ImageButton>
 
 

@@ -130,8 +130,6 @@ public class DetailFragment extends Fragment {
 
 
 
-
-
         Button mCall = rootView.findViewById(R.id.btn_call);
         Button mApplication = rootView.findViewById(R.id.btn_application);
 

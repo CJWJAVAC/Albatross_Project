@@ -44,15 +44,15 @@
                 android:visibility="gone" />
         </FrameLayout>
 
-<!--        <ListView-->
-<!--            android:id="@android:id/list"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:background="#FFE3EE"-->
-<!--            android:divider="@android:color/transparent"-->
-<!--            android:dividerHeight="8dp"-->
-<!--            android:padding="8dp"-->
-<!--            android:radius="30dp" />-->
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFE3EE"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="8dp"
+            android:padding="8dp"
+            android:radius="30dp" />
 
         <FrameLayout
             android:id="@+id/fragment_container"

@@ -59,7 +59,7 @@ import kotlinx.coroutines.Job;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends ListFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -230,7 +230,7 @@ public class HomeFragment extends Fragment {
                     employerIdTokens.add(idValue.get("employerIdToken"));
                     items.add(idValue.get("name")+"\n"+"시급 "+idValue.get("wage")+"원\n"+idValue.get("startHour")+"시 ~ "+idValue.get("endHour")+"시\n"+ "경기도 수원시" + idValue.get("region")+"\n"+idValue.get("phoneNumber"));
 
-                    //id.add(idValue.get("id"));
+                    id.add(idValue.get("id"));
                     wage.add("시급 "+idValue.get("wage"));
                     time.add(idValue.get("startHour")+":"+idValue.get("startMinute")+"~"+idValue.get("endHour")+":"+idValue.get("endMinute"));
                     pnum.add(idValue.get("phoneNumber"));
@@ -268,7 +268,7 @@ public class HomeFragment extends Fragment {
                         Intent intent = new Intent(getContext(), DetailActivity.class);
                         intent.putExtra("item", item);
 
-                        //intent.putExtra("id", id.get(position));
+                        intent.putExtra("id", id.get(position));
                         intent.putExtra("wage", wage.get(position));
                         intent.putExtra("time", time.get(position));
                         intent.putExtra("phoneNumber", pnum.get(position));
@@ -277,6 +277,7 @@ public class HomeFragment extends Fragment {
                         intent.putExtra("age", age.get(position));
                         intent.putExtra("education", education.get(position));
                         intent.putExtra("eperiod", eperiod.get(position));
+                        intent.putExtra("employerIdToken", employerIdTokens.get(position));
                         intent.putExtra("day2", day2.get(position));
 
                         startActivity(intent);
@@ -426,6 +427,7 @@ public class HomeFragment extends Fragment {
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
+
     }
 
 //        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
@@ -523,8 +525,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -540,6 +541,8 @@ public class HomeFragment extends Fragment {
 
         recyclerView3 = rootView.findViewById(R.id.recyclerView3);
         setupRecyclerView3();
+        return rootView;
+    }
 
 
     @Override
@@ -553,6 +556,7 @@ public class HomeFragment extends Fragment {
         showDetail.putExtra("jobId", item);
         showDetail.putExtra("employerIdToken", employerIdTokens.get(position));
         showDetail.putExtra("id", ids.get(position));
+        showDetail.putExtra("position", String.valueOf(position));
         startActivity(showDetail);
     }
 
@@ -598,10 +602,6 @@ public class HomeFragment extends Fragment {
             }
         }
         adapter.setFilteredList(filteredItems);
-    }
-
-        return rootView;
-        //return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
 }
