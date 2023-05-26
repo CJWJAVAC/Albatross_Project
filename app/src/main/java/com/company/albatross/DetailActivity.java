@@ -118,14 +118,21 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 //        tv_text = findViewById(R.id.tv_text);
 
-        Intent showDetail = getIntent();
-        str = showDetail.getStringExtra("jobId");
-        employerIdToken=showDetail.getStringExtra("employerIdToken");
-        userIdToken=currentUser.getUid();
-        id=showDetail.getStringExtra("id");
-        Log.i("employerIdToken",String.valueOf(employerIdToken) );
-        Log.i("id", String.valueOf(id));
-        Log.i("userIdToken", String.valueOf(userIdToken));
+//        Intent showDetail = getIntent();
+//        str = showDetail.getStringExtra("jobId");
+//        employerIdToken=showDetail.getStringExtra("employerIdToken");
+//        userIdToken=currentUser.getUid();
+//        id=showDetail.getStringExtra("id");
+
+//        Log.i("employerIdToken",employerIdToken );
+//        Log.i("id", id);
+//        Log.i("userIdToken", userIdToken);
+
+
+
+//        Intent intent = getIntent();
+//        String id = intent.getStringExtra("id");
+
 
         // Fragment 추가
         if (savedInstanceState == null) {
@@ -135,5 +142,29 @@ public class DetailActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, detailFragment)
                     .commit();
         }
+
+
+        Button mCall = (Button)findViewById(R.id.btn_call);
+
+        mCall.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                mNum = str.substring(str.length()-13,str.length());
+                String tel = "tel:"+mNum;
+                Uri uri = Uri.parse(tel);
+                Intent callIntent = new Intent(Intent.ACTION_DIAL,uri);
+                startActivity(callIntent);
+            }
+        });
+
+        Button mApplication=(Button) findViewById(R.id.btn_application);
+        mApplication.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(android.view.View v){
+                mDatabase= FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+                mDatabase.child("Notif").child(employerIdToken).child(id).push().setValue(userIdToken);
+            }
+        });
+
     }
 }

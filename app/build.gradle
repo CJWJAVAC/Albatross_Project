@@ -55,4 +55,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0' //추가
     implementation 'androidx.recyclerview:recyclerview:1.2.1' //추가
     implementation 'androidx.cardview:cardview:1.0.0' //추가
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.google.firebase:firebase-storage'
 }

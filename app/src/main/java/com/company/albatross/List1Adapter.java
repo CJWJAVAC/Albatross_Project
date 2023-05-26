@@ -61,13 +61,13 @@ public class List1Adapter extends RecyclerView.Adapter<List1Adapter.ViewHolder> 
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     String item = mItems.get(position);
-                    mListener.onItemClick(item);
+                    mListener.onItemClick(item, position);
                 }
             }
         }
     }
 
     public interface OnItemClickListener {
-        void onItemClick(String item);
+        void onItemClick(String item, int position);
     }
 }
