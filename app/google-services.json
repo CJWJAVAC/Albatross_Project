@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "638642313536",
+    "project_id": "albatross-ed1d1",
+    "storage_bucket": "albatross-ed1d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:638642313536:android:d0cf8ff05efc0e712982a5",
+        "android_client_info": {
+          "package_name": "com.company.albatross"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "638642313536-gnsvjjii3jg26ln4en5mc2p4s3f9cmp2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlqTI_fXtJGNu7P0BoCpTjXy_mHa1IpQY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "638642313536-gnsvjjii3jg26ln4en5mc2p4s3f9cmp2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name">Albatross</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="items">
+        <item>쿠팡로지스틱스서비스(유)\n[일최대25만원/셔틀제공]\n쿠팡알바/원하는날/당일/주말/단기/야간/오전\n중구 신당동 일25.2만원\n01055144736</item>
+        <item>위메프 강북센터\n[수유역]게시판 답글/대표전화 상담\n(주문,배송관련)/후단전산 등\n노원구 전체 월 230만원</item>
+        <item>우리은행\n[우리은행 순수대출관련 인바운드 단순상담]\n영업x/지원금80만/초보가능\n강남구 논현동 월 250만원</item>
+        <item>여기어때 고객센터\n[월286/평일근무]\n여기어때 항공관련 단순 문의응대\n강동구 명일동 월 286만원</item>
+    </string-array>
+
+    <string-array name="job_array">
+        <item>delivery</item>
+        <item>serving</item>
+        <item>cooking</item>
+        <item>cafe</item>
+        <item>store</item>
+    </string-array>
+    <string-array name="location_array">
+        <item>광교동</item>
+        <item>망포동</item>
+        <item>매탄동</item>
+        <item>신동</item>
+        <item>영통동</item>
+        <item>원천동</item>
+        <item>이의동</item>
+        <item>태장동</item>
+        <item>하동</item>
+    </string-array>
+    <string-array name="gender_array">
+        <item>성별 무관</item>
+        <item>남성만</item>
+        <item>여성만</item>
+    </string-array>
+    <string-array name="period_array">
+        <item>상시모집</item>
+        <item>1일 후 마감</item>
+        <item>3일 후 마감</item>
+        <item>7일 후 마감</item>
+        <item>1개월 후 마감</item>
+    </string-array>
+    <string-array name="education_array">
+        <item>고등학교 졸업</item>
+        <item>대학교 재학</item>
+        <item>대학교 졸업</item>
+    </string-array>
+    <string-array name="eperiod_array">
+        <item>당일 근무</item>
+        <item>1개월 미만</item>
+        <item>1개월 ~ 3개월</item>
+        <item>3개월 ~ 6개월</item>
+        <item>1년 이상</item>
+    </string-array>
+
+    <string-array name="wage_array">
+        <item>9000</item>
+        <item>10000</item>
+        <item>11000</item>
+        <item>12000</item>
+        <item>13000</item>
+        <item>14000</item>
+        <item>15000</item>
+        <item>16000</item>
+        <item>17000</item>
+        <item>18000</item>
+        <item>19000</item>
+        <item>20000</item>
+    </string-array>
+    <string-array name="day_array">
+        <item>mon</item>
+        <item>tue</item>
+        <item>wen</item>
+        <item>thu</item>
+        <item>fri</item>
+        <item>sat</item>
+        <item>sun</item>
+    </string-array>
+    <string-array name="my_header_title">
+        <item></item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+</resources>

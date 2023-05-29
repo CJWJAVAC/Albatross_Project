@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".PostActivity">
+    <EditText
+        android:id="@+id/post_contents_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:background="@null"
+        android:hint="id" />
+    <EditText
+        android:id="@+id/post_contents_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="day" />
+    <EditText
+        android:id="@+id/post_contents_employerIdToken"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="employerIdToken" />
+
+    <EditText
+        android:id="@+id/post_contents_education"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="education" />
+    <EditText
+        android:id="@+id/post_contents_endhour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="endhour" />
+    <EditText
+        android:id="@+id/post_contents_endminute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="endminute" />
+    <EditText
+        android:id="@+id/post_contents_eperiod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="eperiod" />
+    <EditText
+        android:id="@+id/post_contents_starthour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="starthour" />
+    <EditText
+        android:id="@+id/post_contents_startminute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="startminute" />
+    <EditText
+        android:id="@+id/post_contents_job"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="job" />
+    <EditText
+        android:id="@+id/post_contents_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="name" />
+    <EditText
+        android:id="@+id/post_contents_region"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="region" />
+    <EditText
+        android:id="@+id/post_contents_phonenumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="phonenumber" />
+    <EditText
+        android:id="@+id/post_contents_period"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="period" />
+    <EditText
+        android:id="@+id/post_contents_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="gender" />
+    <EditText
+        android:id="@+id/post_contents_wage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="wage" />
+    <EditText
+        android:id="@+id/post_contents_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@null"
+        android:hint="image" />
+
+
+</LinearLayout>
