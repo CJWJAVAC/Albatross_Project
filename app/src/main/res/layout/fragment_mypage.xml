@@ -3,23 +3,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <ImageView
-        android:id="@+id/userimage"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="94dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/mypageuser">
-    </ImageView>
+        android:scaleType="centerCrop">
 
-    <ImageView
+        <ImageView
+            android:id="@+id/userimage"
+            android:layout_width="94dp"
+            android:layout_height="94dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/usericon"></ImageView>
+        <TextView
+            android:id="@+id/username"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:autoSizeTextType="uniform"
+            android:textColor="@color/black"
+            />
+
+
+
+    </LinearLayout>
+
+    <ImageButton
         android:id="@+id/myscheduleimage"
         android:layout_width="match_parent"
         android:layout_height="94dp"
         android:layout_margin="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/mypageimage"
-        android:background="@drawable/item_shape"></ImageView>
+        android:background="@drawable/item_shape"></ImageButton>
+    <ImageButton
+        android:id="@+id/mydataimage"
+        android:layout_width="match_parent"
+        android:layout_height="94dp"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/mydata"
+        android:background="@drawable/item_shape"></ImageButton>
 
 
     <ListView

@@ -31,7 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
+
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -52,12 +52,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import kotlinx.coroutines.Job;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends ListFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -82,7 +84,13 @@ public class HomeFragment extends Fragment {
     private String mParam2;
     private DatabaseReference mDatabase;
     private ArrayList<String> employerIdTokens = new ArrayList<>();
-    private ArrayList<String> ids=new ArrayList<>();
+    private ArrayList<String> ids = new ArrayList<>();
+
+    private EditText editText;
+    private ListAdapter adapter;
+    private ArrayList<String> items;
+    private ArrayList<String> filteredItems;
+
 
     private EditText editText;
     private ListAdapter adapter;
@@ -133,6 +141,7 @@ public class HomeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public void startTimer() {
         TimerTask task = new TimerTask() {
             @Override
@@ -164,6 +173,7 @@ public class HomeFragment extends Fragment {
         super.onPause();
         stopSlideshow();
     }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -199,47 +209,31 @@ public class HomeFragment extends Fragment {
         });
         slideThread.start();
     }
+
     private void stopSlideshow() {
         if (slideThread != null) {
             slideThread.interrupt();
             slideThread = null;
         }
     }
-//    private void setupListView() {
-//        mDatabase= FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
-//        DatabaseReference idRef = mDatabase.child("ID");
-//        Query query=idRef.limitToFirst(5);
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot snapshot) {
-//                ArrayList<String> items = new ArrayList<>();
-//                for(DataSnapshot childSnapshot : snapshot.getChildren()){
-//                    ids.add(childSnapshot.getKey());
-//                    HashMap<String, String> idValue =(HashMap<String, String>) childSnapshot.getValue();
-//                    employerIdTokens.add(idValue.get("employerIdToken"));
-//                    items.add(idValue.get("name")+"\n"+"시급 "+idValue.get("wage")+"원\n"+idValue.get("startHour")+"시 ~ "+idValue.get("endHour")+"시\n"+ "경기도 수원시" + idValue.get("region")+"\n"+idValue.get("phoneNumber"));
-//                }
-//                ListAdapter adapter = new ListAdapter(mActivity, items);
-//                setListAdapter(adapter);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                System.out.println("Error: " + databaseError.getMessage());
-//            }
-//        });
-//    }
+
+
+//     private void setupListView() {
 
 
     private void setupRecyclerView() {
         mDatabase= FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+
         DatabaseReference idRef = mDatabase.child("ID");
-        Query query=idRef.limitToFirst(5);
+        Query query = idRef.limitToFirst(5);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 items = new ArrayList<>();
-                for(DataSnapshot childSnapshot : snapshot.getChildren()){
+
+                
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+
                     ids.add(childSnapshot.getKey());
                     //String childId = childSnapshot.getKey();
 
@@ -263,24 +257,25 @@ public class HomeFragment extends Fragment {
 
                 }
 
-//                adapter = new ListAdapter(mActivity, items);
-//                adapter.setFilteredList(items);
-//                setListAdapter(adapter);
+                       
+                adapter = new ListAdapter(mActivity, items);
+                adapter.setFilteredList(items);
+                setListAdapter(adapter);
 
-//                editText.addTextChangedListener(new TextWatcher() {
-//                    @Override
-//                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                    }
-//
-//                    @Override
-//                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                    }
-//
-//                    @Override
-//                    public void afterTextChanged(Editable editable) {
-//                        filterList(editable.toString());
-//                    }
-//                });
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        filterList(editable.toString());
+                    }
+                });
 
                 List1Adapter adapter = new List1Adapter(items);
                 adapter.setOnItemClickListener(new List1Adapter.OnItemClickListener() {
@@ -299,11 +294,13 @@ public class HomeFragment extends Fragment {
                         intent.putExtra("education", education.get(position));
                         intent.putExtra("eperiod", eperiod.get(position));
                         intent.putExtra("employerIdToken", employerIdTokens.get(position));
+
                         intent.putExtra("day", day.get(position));
                         intent.putExtra("job", job.get(position));
                         intent.putExtra("num", num.get(position));
                         intent.putExtra("name", name.get(position));
 
+                      
                         startActivity(intent);
                     }
                 });
@@ -420,6 +417,7 @@ public class HomeFragment extends Fragment {
                 recyclerView2.setItemViewCacheSize(2);
                 recyclerView2.setDrawingCacheEnabled(true);
                 recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
             }
 
             @Override
@@ -427,6 +425,12 @@ public class HomeFragment extends Fragment {
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
+    }
+
+
+    private void filterList(String searchText) {
+        ListAdapter adapter = (ListAdapter) getListAdapter();
+        adapter.getFilter().filter(searchText);
     }
 
     private void setupRecyclerView3() {
@@ -507,6 +511,7 @@ public class HomeFragment extends Fragment {
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
+
     }
 
 //        TypedArray itemNames = getResources().obtainTypedArray(R.array.items);
@@ -586,6 +591,7 @@ public class HomeFragment extends Fragment {
 //        recyclerView3.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 //    }
 
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -599,11 +605,11 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -619,53 +625,68 @@ public class HomeFragment extends Fragment {
 
         recyclerView3 = rootView.findViewById(R.id.recyclerView3);
         setupRecyclerView3();
-
         return rootView;
-        //return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
 
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//
-//        editText = view.findViewById(R.id.search_view);
-//        editText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                // 구현 내용 없음.
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                // 입력된 텍스트에 기반하여 항목을 필터링합니다.
-//                filterItems(s.toString());
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                // 구현 내용 없음.
-//            }
-//        });
-//    }
-//
-//    private void filterItems(String searchText) {
-//        filteredItems = new ArrayList<>();
-//
-//        String[] searchWords = searchText.toLowerCase().split("\\s+");
-//
-//        for (String item : items) {
-//            boolean isMatched = true;
-//            for (String word : searchWords) {
-//                if (!item.toLowerCase().contains(word)) {
-//                    isMatched = false;
-//                    break;
-//                }
-//            }
-//            if (isMatched || searchText.isEmpty()) {
-//                filteredItems.add(item);
-//            }
-//        }
-//        adapter.setFilteredList(filteredItems);
-//    }
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        // 클릭된 아이템의 값을 가져옵니다.
+        String item = (String) getListAdapter().getItem(position);
+        // Toast로 출력합니다.
+        //Toast.makeText(getActivity(), "선택된 알바: " + item, Toast.LENGTH_SHORT).show();
+        Intent showDetail = new Intent(mActivity.getApplicationContext(), DetailActivity.class);
+        showDetail.putExtra("jobId", item);
+        showDetail.putExtra("employerIdToken", employerIdTokens.get(position));
+        showDetail.putExtra("id", ids.get(position));
+        showDetail.putExtra("position", String.valueOf(position));
+        startActivity(showDetail);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        editText = view.findViewById(R.id.search_view);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 구현 내용 없음.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 입력된 텍스트에 기반하여 항목을 필터링합니다.
+                filterItems(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // 구현 내용 없음.
+            }
+        });
+    }
+
+    private void filterItems(String searchText) {
+        filteredItems = new ArrayList<>();
+
+        String[] searchWords = searchText.toLowerCase().split("\\s+");
+
+        for (String item : items) {
+            boolean isMatched = true;
+            for (String word : searchWords) {
+                if (!item.toLowerCase().contains(word)) {
+                    isMatched = false;
+                    break;
+                }
+            }
+            if (isMatched || searchText.isEmpty()) {
+                filteredItems.add(item);
+            }
+        }
+        adapter.setFilteredList(filteredItems);
+    }
+
+
 }

@@ -156,8 +156,6 @@ public class DetailFragment extends Fragment {
 
 
 
-
-
         Button mCall = rootView.findViewById(R.id.btn_call);
         Button mApplication = rootView.findViewById(R.id.btn_application);
 
@@ -182,7 +180,11 @@ public class DetailFragment extends Fragment {
                 insertData.put("jobId", id);
                 insertData.put("userId", userIdToken);
                 insertData.put("state", "reviewing");
-                mDatabase.child("Notif").child(employerIdToken).child(id).push().setValue(userIdToken);
+
+                
+
+                mDatabase.child("Notif").child(employerIdToken).push().setValue(insertData);
+
             }
         });
 
