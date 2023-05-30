@@ -45,6 +45,16 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
     private ArrayList<String> gRegions;
     private ArrayList<String> gPhoneNumbers;
     private ArrayList<String> gEmployerIds;
+    private ArrayList<String> gPeriod;
+    private ArrayList<String> gGender;
+    private ArrayList<String> gAge;
+    private ArrayList<String> gEducation;
+    private ArrayList<String> gEperiod;
+    private ArrayList<String> gDay;
+    private ArrayList<String> gJob;
+    private ArrayList<String> gNum;
+    private ArrayList<String> gStartMinute;
+    private ArrayList<String> gEndMinute;
     private DatabaseReference mDatabase= FirebaseDatabase.getInstance("https://albatross-ed1d1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
 
 
@@ -55,10 +65,10 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         Intent intent=getIntent();
         ids=(ArrayList<String>) intent.getSerializableExtra("ids");
         NUM_PAGES=ids.size();
-        getDataFromFirebase(0, new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
+        getDataFromFirebase(0, new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
     }
 
-    private void getDataFromFirebase(int idsIdx, ArrayList<String> names, ArrayList<String> wages, ArrayList<String> startTimes, ArrayList<String> endTimes, ArrayList<String> regions, ArrayList<String> phoneNumbers, ArrayList<String> employerIds){
+    private void getDataFromFirebase(int idsIdx, ArrayList<String> names, ArrayList<String> wages, ArrayList<String> startTimes, ArrayList<String> endTimes, ArrayList<String> regions, ArrayList<String> phoneNumbers, ArrayList<String> employerIds, ArrayList<String> periods, ArrayList<String> genders, ArrayList<String> ages, ArrayList<String> educations, ArrayList<String> eperiods, ArrayList<String> days, ArrayList<String> jobs, ArrayList<String> nums, ArrayList<String> startMinutes, ArrayList<String> endMinutes){
         String id= String.format("%3s",ids.get(idsIdx)).replace(' ', '0');
         Log.i("String.format", id);
         DatabaseReference idRef = mDatabase.child("ID").child(id);
@@ -74,11 +84,21 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
                 regions.add(idValues.get("region"));
                 phoneNumbers.add(idValues.get("phoneNumber"));
                 employerIds.add(idValues.get("employerIdToken"));
+                periods.add(idValues.get("period"));
+                genders.add(idValues.get("gender"));
+                ages.add(idValues.get("age"));
+                educations.add(idValues.get("education"));
+                eperiods.add(idValues.get("eperiod"));
+                days.add(idValues.get("day"));
+                jobs.add(idValues.get("job"));
+                nums.add(idValues.get("num"));
+                startMinutes.add(idValues.get("startMinute"));
+                endMinutes.add(idValues.get("endMinute"));
 
                 if (idsIdx+1 < NUM_PAGES)
-                    getDataFromFirebase(idsIdx + 1, names, wages, startTimes, endTimes, regions, phoneNumbers, employerIds);
+                    getDataFromFirebase(idsIdx + 1, names, wages, startTimes, endTimes, regions, phoneNumbers, employerIds, periods,genders,ages,educations,eperiods,days,jobs,nums,startMinutes,endMinutes);
                 else
-                    setViewPager(names, wages, startTimes, endTimes, regions, phoneNumbers, employerIds);
+                    setViewPager(names, wages, startTimes, endTimes, regions, phoneNumbers, employerIds, periods,genders,ages,educations,eperiods,days,jobs,nums,startMinutes,endMinutes);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -87,7 +107,7 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         });
     }
 
-    private void setViewPager(ArrayList<String> names, ArrayList<String> wages, ArrayList<String> startTimes, ArrayList<String> endTimes, ArrayList<String> regions, ArrayList<String> phoneNumbers, ArrayList<String> employerIds){
+    private void setViewPager(ArrayList<String> names, ArrayList<String> wages, ArrayList<String> startTimes, ArrayList<String> endTimes, ArrayList<String> regions, ArrayList<String> phoneNumbers, ArrayList<String> employerIds, ArrayList<String> periods, ArrayList<String> genders, ArrayList<String> ages, ArrayList<String> educations, ArrayList<String> eperiods, ArrayList<String> days, ArrayList<String> jobs, ArrayList<String> nums, ArrayList<String> startMinutes, ArrayList<String> endMinutes){
         this.gNames=names;
         this.gWages=wages;
         this.gStartTimes=startTimes;
@@ -95,6 +115,16 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         this.gRegions=regions;
         this.gPhoneNumbers=phoneNumbers;
         this.gEmployerIds=employerIds;
+        this.gPeriod=periods;
+        this.gGender=genders;
+        this.gAge=ages;
+        this.gEducation=educations;
+        this.gEperiod=eperiods;
+        this.gDay=days;
+        this.gJob=jobs;
+        this.gNum=nums;
+        this.gStartMinute=startMinutes;
+        this.gEndMinute=endMinutes;
         viewPager = findViewById(R.id.pager);
         // Instantiate a ViewPager2 and a PagerAdapter.
         pagerAdapter = new ScreenSlidePagerAdapter(this);
@@ -125,7 +155,7 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         @Override
         public Fragment createFragment(int position) {
             Log.i("starTime, endTime, employerId", String.valueOf(gStartTimes)+" "+String.valueOf(gEndTimes)+" "+String.valueOf(gEmployerIds));
-            return new ScreenSlidePageFragment(gNames.get(position), gWages.get(position), gStartTimes.get(position), gEndTimes.get(position), gRegions.get(position), gPhoneNumbers.get(position), gEmployerIds.get(position), ids.get(position));
+            return new ScreenSlidePageFragment(gNames.get(position), gWages.get(position), gStartTimes.get(position), gEndTimes.get(position), gRegions.get(position), gPhoneNumbers.get(position), gEmployerIds.get(position), ids.get(position), gPeriod.get(position), gGender.get(position), gAge.get(position),gEducation.get(position),gEperiod.get(position),gDay.get(position),gJob.get(position),gNum.get(position),gStartMinute.get(position),gEndMinute.get(position));
         }
 
         @Override
