@@ -122,12 +122,12 @@ public class List2Adapter extends RecyclerView.Adapter<List2Adapter.ViewHolder> 
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     String name = mTextView.getText().toString();
-                    mListener.onItemClick(name);
+                    mListener.onItemClick(name, position);
                 }
             }
         }
     }
     public interface OnItemClickListener {
-        void onItemClick(String item);
+        void onItemClick(String item, int position);
     }
 }
