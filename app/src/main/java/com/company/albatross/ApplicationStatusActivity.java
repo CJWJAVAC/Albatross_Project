@@ -44,10 +44,14 @@ public class ApplicationStatusActivity extends AppCompatActivity {
         notifRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                long count=0;
+                long employerCount=0;
+                long applicationCount=0;
+                Log.i("snapshot.getChildrenCount()",String.valueOf(snapshot.getChildrenCount()));
                 for(DataSnapshot employer: snapshot.getChildren()){
+                    Log.i("employer.getChildrenCount()",String.valueOf(employer.getChildrenCount()));
+                    employerCount+=1;
                     for(DataSnapshot application: employer.getChildren()){
-                        count+=application.getChildrenCount();
+                        applicationCount+=1;
                         String userId = application.child("userId").getValue().toString();
                         Log.i("userId",userId);
                         Log.i("userIdToken",userIdToken);
@@ -58,21 +62,23 @@ public class ApplicationStatusActivity extends AppCompatActivity {
                             Log.i("jobId", jobId);
                             Log.i("state",state);
                             DatabaseReference idRef = mDatabase.child("ID").child(jobId);
-                            long finalCount = count;
+                            long finalEmployerCount = employerCount;
+                            long finalApplicationCount = applicationCount;
                             idRef.addValueEventListener(new ValueEventListener() {
                                 @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                public void onDataChange(@NonNull DataSnapshot idsnapshot) {
                                     if(state.equals("accept"))
-                                        accept.add((HashMap<String, String>) snapshot.getValue());
+                                        accept.add((HashMap<String, String>) idsnapshot.getValue());
                                     else if (state.equals("reviewing")){
-                                        reviewing.add((HashMap<String, String>) snapshot.getValue());
+                                        reviewing.add((HashMap<String, String>) idsnapshot.getValue());
                                     }
                                     else if (state.equals("refusal"))
-                                        refusal.add((HashMap<String, String>) snapshot.getValue());
+                                        refusal.add((HashMap<String, String>) idsnapshot.getValue());
 
-                                    Log.i("finalCount",String.valueOf(finalCount));
-                                    Log.i("snapshot.getChildrenCount()",String.valueOf(snapshot.getChildrenCount()));
-                                    if(finalCount ==snapshot.getChildrenCount()){
+                                    Log.i("finalEmployerCount",String.valueOf(finalEmployerCount));
+                                    Log.i("finalApplicationCount",String.valueOf(finalApplicationCount));
+                                    Log.i("snapshot.getChildrenCount()",String.valueOf(idsnapshot.getChildrenCount()));
+                                    if(finalEmployerCount ==snapshot.getChildrenCount() && finalApplicationCount ==employer.getChildrenCount()){
                                         Log.i("accept",String.valueOf(accept));
                                         Log.i("reviewing",String.valueOf(reviewing));
                                         Log.i("refusal",String.valueOf(refusal));

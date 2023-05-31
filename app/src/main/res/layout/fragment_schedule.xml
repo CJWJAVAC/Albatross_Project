@@ -6,12 +6,28 @@
     tools:context=".ScheduleFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
+    <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <Button
             android:id="@+id/create_schedule_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="시간표 생성하기" />
+            android:layout_gravity="center"
+            android:text="시간표 마법사" />
 
+        <com.github.tlaabs.timetableview.TimetableView
+            android:id="@+id/timetable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:column_count="8"
+            app:row_count="25"
+            app:start_time="0"
+            app:header_title="@array/my_header_title"/>
+
+
+    </LinearLayout>
 
 </FrameLayout>

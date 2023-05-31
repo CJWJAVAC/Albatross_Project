@@ -1,6 +1,7 @@
 package com.company.albatross;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +21,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.github.tlaabs.timetableview.TimetableView;
 
 import java.util.ArrayList;
 
@@ -35,7 +40,6 @@ public class ScheduleFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
 
 
 
@@ -79,9 +83,6 @@ public class ScheduleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
 
         Button myButton = view.findViewById(R.id.create_schedule_button);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myButton.getLayoutParams();
-        params.gravity = Gravity.CENTER;
-        myButton.setLayoutParams(params);
         myButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +91,15 @@ public class ScheduleFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        return view;
+        TimetableView timetable=view.findViewById(R.id.timetable);
+        SharedPreferences mPref= PreferenceManager.getDefaultSharedPreferences(getContext());
+        String savedData=mPref.getString("timetable_demo", "");
+        Log.i("savedData",savedData);
+        if(savedData==null||savedData.equals("")) {
+            return view;
+        }else{
+            timetable.load(savedData);
+            return view;
+        }
     }
-
 }

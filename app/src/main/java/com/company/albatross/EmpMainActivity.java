@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.company.albatross.adapters.EmpListAdapter;
+import com.company.albatross.models.adapters.EmpListAdapter;
 import com.company.albatross.models.Post;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
