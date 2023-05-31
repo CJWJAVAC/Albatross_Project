@@ -83,15 +83,25 @@ public class MypageFragment extends ListFragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_mypage, container, false);
         nameText=rootView.findViewById(R.id.username);
-        nameText.setText(userData.get("name")+"님");
+        if (userData != null) {
+            String name = userData.get("name");
+            if (name != null) {
+                nameText.setText(name + "님");
+            }
+        }
 
-        ImageButton applicationStatus = (ImageButton) rootView.findViewById(R.id.myscheduleimage);
+        ImageButton applicationStatus = rootView.findViewById(R.id.myscheduleimage);
         applicationStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(view.getContext(), ApplicationStatusActivity.class);
-                intent.putExtra("userIdToken", userData.get("idToken") );
-                startActivity(intent);
+                if (userData != null) {
+                    String idToken = userData.get("idToken");
+                    if (idToken != null) {
+                        Intent intent = new Intent(view.getContext(), ApplicationStatusActivity.class);
+                        intent.putExtra("userIdToken", idToken);
+                        startActivity(intent);
+                    }
+                }
             }
         });
 

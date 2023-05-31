@@ -92,6 +92,8 @@ public class HomeFragment extends ListFragment {
     private ArrayList<String> filteredItems;
 
 
+
+
     private ArrayList<String> id = new ArrayList<>();
     private ArrayList<String> wage = new ArrayList<>();
     private ArrayList<String> time = new ArrayList<>();
@@ -101,7 +103,10 @@ public class HomeFragment extends ListFragment {
     private ArrayList<String> age = new ArrayList<>();
     private ArrayList<String> education = new ArrayList<>();
     private ArrayList<String> eperiod = new ArrayList<>();
-    private ArrayList<String> day2 = new ArrayList<>();
+    private ArrayList<String> day = new ArrayList<>();
+    private ArrayList<String> job = new ArrayList<>();
+    private ArrayList<String> num = new ArrayList<>();
+    private ArrayList<String> name = new ArrayList<>();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -222,7 +227,10 @@ public class HomeFragment extends ListFragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 items = new ArrayList<>();
+
+                
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+
                     ids.add(childSnapshot.getKey());
                     //String childId = childSnapshot.getKey();
 
@@ -239,9 +247,14 @@ public class HomeFragment extends ListFragment {
                     age.add(idValue.get("age"));
                     education.add(idValue.get("education"));
                     eperiod.add(idValue.get("eperiod"));
-                    day2.add(idValue.get("day2"));
+                    day.add(idValue.get("day"));
+                    job.add(idValue.get("job"));
+                    num.add(idValue.get("num"));
+                    name.add(idValue.get("name"));
+
                 }
 
+                       
                 adapter = new ListAdapter(mActivity, items);
                 adapter.setFilteredList(items);
                 setListAdapter(adapter);
@@ -278,8 +291,13 @@ public class HomeFragment extends ListFragment {
                         intent.putExtra("education", education.get(position));
                         intent.putExtra("eperiod", eperiod.get(position));
                         intent.putExtra("employerIdToken", employerIdTokens.get(position));
-                        intent.putExtra("day2", day2.get(position));
 
+                        intent.putExtra("day", day.get(position));
+                        intent.putExtra("job", job.get(position));
+                        intent.putExtra("num", num.get(position));
+                        intent.putExtra("name", name.get(position));
+
+                      
                         startActivity(intent);
                     }
                 });
@@ -300,6 +318,12 @@ public class HomeFragment extends ListFragment {
             }
         });
     }
+
+//    private void filterList(String searchText) {
+//        ListAdapter adapter = (ListAdapter) getListAdapter();
+//        adapter.getFilter().filter(searchText);
+//    }
+
     public class Item {
         private String name;
         private String imageUrl;
@@ -331,13 +355,28 @@ public class HomeFragment extends ListFragment {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     String key = childSnapshot.getKey();
                     HashMap<String, String> idValue = (HashMap<String, String>) childSnapshot.getValue();
-                    String name = idValue.get("name") + "\n" +
+                    String item = idValue.get("name") + "\n" +
                             "시급 " + idValue.get("wage") + "원\n" +
                             idValue.get("startHour") + "시 ~ " + idValue.get("endHour") + "시\n" +
                             "경기도 수원시" + idValue.get("region") + "\n" +
                             idValue.get("phoneNumber");
                     String imageUrl = idValue.get("image");
-                    items.add(new List2Adapter.Item(name, imageUrl));
+                    items.add(new List2Adapter.Item(item, imageUrl));
+
+                    id.add(idValue.get("id"));
+                    wage.add("시급 "+idValue.get("wage"));
+                    time.add(idValue.get("startHour")+":"+idValue.get("startMinute")+"~"+idValue.get("endHour")+":"+idValue.get("endMinute"));
+                    pnum.add(idValue.get("phoneNumber"));
+                    period.add(idValue.get("period"));
+                    gender.add(idValue.get("gender"));
+                    age.add(idValue.get("age"));
+                    education.add(idValue.get("education"));
+                    eperiod.add(idValue.get("eperiod"));
+                    day.add(idValue.get("day"));
+                    job.add(idValue.get("job"));
+                    num.add(idValue.get("num"));
+                    name.add(idValue.get("name"));
+
                 }
                 List<List2Adapter.Item> listItems2 = new ArrayList<>();
                 for (List2Adapter.Item item : items) {
@@ -346,9 +385,23 @@ public class HomeFragment extends ListFragment {
                 List2Adapter adapter = new List2Adapter(listItems2);
                 adapter.setOnItemClickListener(new List2Adapter.OnItemClickListener() {
                     @Override
-                    public void onItemClick(String item) {
+                    public void onItemClick(String item, int position) {
                         Intent intent = new Intent(getContext(), DetailActivity.class);
                         intent.putExtra("item", item);
+                        intent.putExtra("id", id.get(position));
+                        intent.putExtra("wage", wage.get(position));
+                        intent.putExtra("time", time.get(position));
+                        intent.putExtra("phoneNumber", pnum.get(position));
+                        intent.putExtra("period", period.get(position));
+                        intent.putExtra("gender", gender.get(position));
+                        intent.putExtra("age", age.get(position));
+                        intent.putExtra("education", education.get(position));
+                        intent.putExtra("eperiod", eperiod.get(position));
+                        intent.putExtra("employerIdToken", employerIdTokens.get(position));
+                        intent.putExtra("day", day.get(position));
+                        intent.putExtra("job", job.get(position));
+                        intent.putExtra("num", num.get(position));
+                        intent.putExtra("name", name.get(position));
                         startActivity(intent);
                     }
                 });
@@ -389,13 +442,27 @@ public class HomeFragment extends ListFragment {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     String key = childSnapshot.getKey();
                     HashMap<String, String> idValue = (HashMap<String, String>) childSnapshot.getValue();
-                    String name = idValue.get("name") + "\n" +
+                    String item = idValue.get("name") + "\n" +
                             "시급 " + idValue.get("wage") + "원\n" +
                             idValue.get("startHour") + "시 ~ " + idValue.get("endHour") + "시\n" +
                             "경기도 수원시" + idValue.get("region") + "\n" +
                             idValue.get("phoneNumber");
                     String imageUrl = idValue.get("image");
-                    items.add(new List3Adapter.Item(name, imageUrl));
+                    items.add(new List3Adapter.Item(item, imageUrl));
+
+                    id.add(idValue.get("id"));
+                    wage.add("시급 "+idValue.get("wage"));
+                    time.add(idValue.get("startHour")+":"+idValue.get("startMinute")+"~"+idValue.get("endHour")+":"+idValue.get("endMinute"));
+                    pnum.add(idValue.get("phoneNumber"));
+                    period.add(idValue.get("period"));
+                    gender.add(idValue.get("gender"));
+                    age.add(idValue.get("age"));
+                    education.add(idValue.get("education"));
+                    eperiod.add(idValue.get("eperiod"));
+                    day.add(idValue.get("day"));
+                    job.add(idValue.get("job"));
+                    num.add(idValue.get("num"));
+                    name.add(idValue.get("name"));
                 }
                 List<List3Adapter.Item> listItems3 = new ArrayList<>();
                 for (List3Adapter.Item item : items) {
@@ -404,9 +471,23 @@ public class HomeFragment extends ListFragment {
                 List3Adapter adapter = new List3Adapter(listItems3);
                 adapter.setOnItemClickListener(new List3Adapter.OnItemClickListener() {
                     @Override
-                    public void onItemClick(String item) {
+                    public void onItemClick(String item, int position) {
                         Intent intent = new Intent(getContext(), DetailActivity.class);
                         intent.putExtra("item", item);
+                        intent.putExtra("id", id.get(position));
+                        intent.putExtra("wage", wage.get(position));
+                        intent.putExtra("time", time.get(position));
+                        intent.putExtra("phoneNumber", pnum.get(position));
+                        intent.putExtra("period", period.get(position));
+                        intent.putExtra("gender", gender.get(position));
+                        intent.putExtra("age", age.get(position));
+                        intent.putExtra("education", education.get(position));
+                        intent.putExtra("eperiod", eperiod.get(position));
+                        intent.putExtra("employerIdToken", employerIdTokens.get(position));
+                        intent.putExtra("day", day.get(position));
+                        intent.putExtra("job", job.get(position));
+                        intent.putExtra("num", num.get(position));
+                        intent.putExtra("name", name.get(position));
                         startActivity(intent);
                     }
                 });
@@ -603,5 +684,6 @@ public class HomeFragment extends ListFragment {
         }
         adapter.setFilteredList(filteredItems);
     }
+
 
 }

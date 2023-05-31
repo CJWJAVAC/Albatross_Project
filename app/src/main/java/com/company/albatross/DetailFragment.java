@@ -61,7 +61,10 @@ public class DetailFragment extends Fragment {
     private TextView ageTextView;
     private TextView educationTextView;
     private TextView eperiodTextView;
-    private TextView day2TextView;
+    private TextView dayTextView;
+    private TextView jobTextView;
+    private TextView numTextView;
+    private TextView nameTextView;
 
 
     @Override
@@ -77,7 +80,10 @@ public class DetailFragment extends Fragment {
         ageTextView = rootView.findViewById(R.id.age_text);
         educationTextView = rootView.findViewById(R.id.education_text);
         eperiodTextView = rootView.findViewById(R.id.eperiod_text);
-        day2TextView = rootView.findViewById(R.id.day2_text);
+        dayTextView = rootView.findViewById(R.id.day_text);
+        jobTextView = rootView.findViewById(R.id.job_text);
+        numTextView = rootView.findViewById(R.id.num_text);
+        nameTextView = rootView.findViewById(R.id.name_text);
 
 
 
@@ -114,7 +120,26 @@ public class DetailFragment extends Fragment {
         String age = showDetail.getStringExtra("age");
         String education = showDetail.getStringExtra("education");
         String eperiod = showDetail.getStringExtra("eperiod");
-        String day2 = showDetail.getStringExtra("day2");
+        String day = showDetail.getStringExtra("day");
+        String job = showDetail.getStringExtra("job");
+        String num = showDetail.getStringExtra("num");
+        String name = showDetail.getStringExtra("name");
+        if (day != null) {
+            if (day.equals("mon"))
+                day = "월";
+            if (day.equals("tue"))
+                day = "화";
+            if (day.equals("wen"))
+                day = "수";
+            if (day.equals("tur"))
+                day = "목";
+            if (day.equals("fri"))
+                day = "금";
+            if (day.equals("sat"))
+                day = "토";
+            if (day.equals("sun"))
+                day = "일";
+        }
 
 
 
@@ -126,7 +151,10 @@ public class DetailFragment extends Fragment {
         ageTextView.setText(age);
         educationTextView.setText(education);
         eperiodTextView.setText(eperiod);
-        day2TextView.setText(day2);
+        dayTextView.setText(day);
+        jobTextView.setText(job);
+        numTextView.setText(num);
+        nameTextView.setText(name);
 
 
 
@@ -154,7 +182,11 @@ public class DetailFragment extends Fragment {
                 insertData.put("jobId", id);
                 insertData.put("userId", userIdToken);
                 insertData.put("state", "reviewing");
+
+                
+
                 mDatabase.child("Notif").child(employerIdToken).push().setValue(insertData);
+
             }
         });
 
@@ -164,7 +196,7 @@ public class DetailFragment extends Fragment {
             String item = args.getString("item");
             //String time = args.getString("time");
             if (item != null) {
-                mItemTextView.setText(item);
+                //mItemTextView.setText(item);
                 //timeTextView.setText(time);
             }
         }
