@@ -124,20 +124,22 @@ public class DetailFragment extends Fragment {
         String job = showDetail.getStringExtra("job");
         String num = showDetail.getStringExtra("num");
         String name = showDetail.getStringExtra("name");
-        if (day.equals("mon"))
-            day = "월";
-        if (day.equals("tue"))
-            day = "화";
-        if (day.equals("wen"))
-            day = "수";
-        if (day.equals("tur"))
-            day = "목";
-        if (day.equals("fri"))
-            day = "금";
-        if (day.equals("sat"))
-            day = "토";
-        if (day.equals("sun"))
-            day = "일";
+        if (day != null) {
+            if (day.equals("mon"))
+                day = "월";
+            if (day.equals("tue"))
+                day = "화";
+            if (day.equals("wen"))
+                day = "수";
+            if (day.equals("tur"))
+                day = "목";
+            if (day.equals("fri"))
+                day = "금";
+            if (day.equals("sat"))
+                day = "토";
+            if (day.equals("sun"))
+                day = "일";
+        }
 
 
 

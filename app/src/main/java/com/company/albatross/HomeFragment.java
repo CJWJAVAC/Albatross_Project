@@ -92,10 +92,7 @@ public class HomeFragment extends ListFragment {
     private ArrayList<String> filteredItems;
 
 
-    private EditText editText;
-    private ListAdapter adapter;
-    ArrayList<String> items;
-    private ArrayList<String> filteredItems;
+
 
     private ArrayList<String> id = new ArrayList<>();
     private ArrayList<String> wage = new ArrayList<>();
